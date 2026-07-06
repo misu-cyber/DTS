@@ -1,1 +1,138 @@
-/* You can add global styles to this file, and also import other style files */
+body { font-family: "Poppins", sans-serif;}
+.primary {
+  background-color: #040484;
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.primary:hover {
+  background-color: #040484;
+  color: white;
+}
+
+.info {
+  background-color: #1919D1;
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.info:hover {
+  background-color: #1919D1;
+  color: white;
+}
+
+.warning {
+  background-color: #EDAC36;
+  border: none;
+  color: black;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.warning:hover {
+  background-color: #d38f13;
+  color: black;
+}
+
+.danger {
+  background-color: #C7383A;
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.danger:hover {
+  background-color: #b33234;
+  color: white;
+}
+
+.success {
+  background-color: #3FA34D;
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.success:hover {
+  background-color: #368b42;
+  color: white;
+}
+
+.fc-toolbar-title {
+  color: #1e293b;
+}
+
+.fc-daygrid-day-number {
+  color: #334155;
+}
+
+.fc-col-header-cell-cushion {
+  color: #475569;
+}
+
+.fc a {
+  text-decoration: none !important;
+}
+
+//=============================================================================
+
+.primary-btn {
+  background-color: #040484;
+  border: none;
+  color: white;
+  padding: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background-color: #040484;
+  color: white;
+}

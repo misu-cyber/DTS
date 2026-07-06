@@ -1,0 +1,173 @@
+<div class="container mt-3">
+  
+    <div class="card mb-3" style="background-color: #040484;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12"><h4 class="text-white" style="padding-top:12px;">Administrator</h4></div>
+            </div>
+        </div>
+    </div>
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active">Administrator</li>
+    </ol>
+
+    <div class="card bg-light">
+        <div class="card-body">
+            <table id="tblDocuments">
+                <thead>
+                    <tr>
+						<td>Id</td>
+						<td>Status</td>
+                        <td>No.</td>
+                        <td>Control No.</td>
+                        <td>Document Title</td>
+                        <td>Created By</td>
+                        <td>Current Location</td>
+                        <td>Status</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+				<tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal" id="view">
+	<div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+
+      		<div class="modal-header">
+        		<h4 class="modal-title">View Document</h4>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      		</div>
+
+      		<div class="modal-body">
+				<div class="float-end">
+					<button class="primary" (click)="printRouting(this.control_no)"><i class="fa-solid fa-print"></i> Print</button>
+				</div>
+				
+				<table class="table table-responsive table-hover">
+					<tr>
+						<th style="width: 30%">Control No.:</th>
+						<td>{{this.control_no}}</td>
+					</tr>
+					<tr>
+						<th>Document Title:</th>
+						<td>{{this.title}}</td>
+					</tr>
+					<tr>
+						<th>Document Code:</th>
+						<td>{{this.code}}</td>
+					</tr>
+					<tr>
+						<th>Document Type:</th>
+						<td>{{this.docType}}</td>
+					</tr>
+					<tr>
+						<th>Document Category:</th>
+						<td>{{this.category}}</td>
+					</tr>
+					<tr>
+						<th>Document Classification:</th>
+						<td>
+							@switch(this.confidential){
+								@case (true) {Confidential}
+								@case (false) {Public}
+							}
+						</td>
+					</tr>
+					<tr>
+						<th>Attachments:</th>
+						<td>
+							@for(attach of attachment; track attach.id){
+								{{attach.attachment_name}} <br/>
+							}
+						</td>
+					</tr>
+				</table>
+
+				<hr/>
+
+				<table class="table table-responsive table-bordered">
+					<tr>
+						<th>DATE</th>
+						<th>TIME</th>
+						<th>STATUS</th>
+						<th>OFFICE</th>
+						<th>PERSONNEL</th>
+						<th>REMARKS</th>
+					</tr>
+					@for(route of route; track route.id){
+						<tr>
+							<td>{{route.date}}</td>
+							<td>{{route.time}}</td>
+							<td>
+								@switch(route.status){
+									@case (1) {Created}
+									@case (2) {Released}
+									@case (3) {Ongoing}
+									@case (4) {Completed}
+									@case (5) {Cancelled}
+								}
+							</td>
+							<td>
+								@if(route.office == null)
+								{N/A}
+								@else {{{route.office}}}
+							</td>
+							<td>{{route.personnel}}</td>
+							<td>{{route.remarks}}</td>
+						</tr>
+					}
+				</table>
+				
+      		</div>
+			<div class="modal-footer">
+				@if(this.status != 4 && this.status != 5) {
+					<div class="row">
+						<div class="col-md-12">
+							<div class="float-start">
+								<button type="button" class="btn primary" (click)="viewTransfer()" data-bs-toggle="modal" data-bs-target="#transfer"><i class="fa-solid fa-file-export"></i> TRANSFER DOCUMENT</button>
+							</div>
+							<div class="float-end">
+								<div class="btn-group">
+									<button type="button" class="btn success" (click)="completeDocument(this.control_no)"><i class="fa-solid fa-check"></i> COMPLETE</button>
+									<button type="button" class="btn danger" (click)="cancelDocument(this.control_no)"><i class="fa-solid fa-multiply"></i> REVOKE</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+
+    	</div>
+  	</div>
+</div>
+
+<div class="modal" id="transfer">
+	<div class="modal-dialog modal-md">
+    	<div class="modal-content">
+
+			<div class="modal-header">
+        		<h4 class="modal-title">Transfer Document</h4>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      		</div>
+
+			<div class="modal-body">
+				<label>Transfer to: <span class="text-danger">*</span></label>
+				<select class="form-select mb-3" [(ngModel)]="transfer" name="transfer">
+					@for (employee of employees; track employee.id) {
+						<option value="{{employee.c_empID}}">{{ employee.c_surname}}, {{ employee.c_firstname}}</option>
+					}
+				</select>
+
+				<button type="button" class="btn primary" (click)="transferDocument()" data-bs-toggle="modal" data-bs-target="#transfer"><i class="fa-solid fa-file-export"></i> TRANSFER</button>
+			</div>
+
+		</div>
+	</div>
+</div>

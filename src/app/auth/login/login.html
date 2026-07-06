@@ -1,0 +1,186 @@
+<div class="row">
+	<div class="col-md-4">
+		<div class="container">
+			<h2 align="center"><img src="../../../assets/images/TECLogo.png" width="100%"/></h2>
+			<form>
+				<input
+				class="form-control mb-3"
+				type="email"
+				[(ngModel)]="email"
+				name="email"
+				placeholder="Email"
+				required
+				/>
+				<input
+				class="form-control mb-3"
+				type="password"
+				[(ngModel)]="password"
+				name="password"
+				placeholder="Password"
+				(keyup.enter)="signInWithEmail()"
+				required
+				/>
+				<button type="button" class="button primary" (click)="signInWithEmail()">Sign In</button>
+			</form>
+			<div class="row">
+				<div class="col-md-6"><p><a href="/signup">Sign Up</a></p></div>
+				<div class="col-md-6"><p style="text-align: right;"><a href="/reset">Reset Password</a></p></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div class="container">
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" name="search" [(ngModel)]="search" placeholder="Search keyword" (keyup.enter)="fetchDocs()">
+				<button class="btn btn-success" type="button" (click)="fetchDocs()"><i class="fa-solid fa-magnifying-glass"></i></button>
+			</div>
+
+			<div class="row">
+				@for (docs of result; track docs.id) {
+					<div class="col-md-3 mb-3">
+						<div class="card">
+							<div class="card-body">
+								{{docs.control_no}} <br/>
+								<b>{{docs.document_title}}</b> <br/>
+								<p>{{docs.originating_office}}</p>
+								<div class="row">
+									<div class="col-md-12">
+										@switch(docs.status) {
+											@case (1) {<span class="badge bg-secondary">Created</span>}
+											@case (2) {<span class="badge bg-primary">Released</span>}
+											@case (3) {<span class="badge bg-primary">Ongoing</span>}
+											@case (4) {<span class="badge bg-success">Completed</span>}
+											@case (5) {<span class="badge bg-danger">Cancelled</span>}
+										}
+									</div>
+									<div class="col-md-12">
+										@switch (docs.isConfidential) {
+											@case (true) {<span class="badge bg-danger">Confidential</span>}
+											@case (false) {<span class="badge bg-secondary">Public</span>}
+										}
+									</div>
+									<div class="col-md-12">
+										<!-- <div class="float-end"> -->
+											 <button class="button primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
+										<!-- </div> -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+				<nav>
+					<ul class="pagination justify-content-center">
+						<li class="page-item" [class.disabled]="currentPage === 1">
+							<button	class="page-link" (click)="previousPage()">Previous</button>
+						</li>
+
+						@for (page of pages; track page) {
+							<li class="page-item" [class.active]="page === currentPage">
+								<button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+							</li>
+						}
+
+						<li class="page-item" [class.disabled]="currentPage === totalPages">
+							<button	class="page-link" (click)="nextPage()">Next</button>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="view">
+	<div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+
+      		<div class="modal-header">
+        		<h4 class="modal-title">View Document</h4>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      		</div>
+
+      		<div class="modal-body">
+				<!-- <div class="float-end">
+					<button class="primary" (click)="printRouting(this.control_no)"><i class="fa-solid fa-print"></i> Print</button>
+				</div> -->
+				
+				<table class="table table-responsive table-hover">
+					<tr>
+						<th style="width: 30%">Control No.:</th>
+						<td>{{this.control_no}}</td>
+					</tr>
+					<tr>
+						<th>Document Title:</th>
+						<td>{{this.title}}</td>
+					</tr>
+					<tr>
+						<th>Document Code:</th>
+						<td>{{this.code}}</td>
+					</tr>
+					<tr>
+						<th>Document Type:</th>
+						<td>{{this.docType}}</td>
+					</tr>
+					<tr>
+						<th>Document Category:</th>
+						<td>{{this.category}}</td>
+					</tr>
+					<tr>
+						<th>Document Classification:</th>
+						<td>
+							@switch(this.confidential){
+								@case (true) {Confidential}
+								@case (false) {Public}
+							}
+						</td>
+					</tr>
+					<tr>
+						<th>Attachments:</th>
+						<td>
+							@for(attach of attachment; track attach.id){
+								{{attach.attachment_name}} <br/>
+							}
+						</td>
+					</tr>
+				</table>
+
+				<hr/>
+
+				<table class="table table-responsive table-bordered">
+					<tr>
+						<th>DATE</th>
+						<th>TIME</th>
+						<th>STATUS</th>
+						<th>OFFICE</th>
+						<th>PERSONNEL</th>
+						<th>REMARKS</th>
+					</tr>
+					@for(route of route; track route.id){
+						<tr>
+							<td>{{route.date}}</td>
+							<td>{{route.time}}</td>
+							<td>
+								@switch(route.status){
+									@case (1) {Created}
+									@case (2) {Released}
+									@case (3) {Ongoing}
+									@case (4) {Completed}
+									@case (5) {Cancelled}
+								}
+							</td>
+							<td>
+								@if(route.office == null)
+								{N/A}
+								@else {{{route.office}}}
+							</td>
+							<td>{{route.personnel}}</td>
+							<td>{{route.remarks}}</td>
+						</tr>
+					}
+				</table>
+				
+      		</div>
+    	</div>
+  	</div>
+</div>

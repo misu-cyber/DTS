@@ -1,0 +1,87 @@
+<div class="container mt-3">
+  
+    <div class="card mb-3" style="background-color: #040484;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-9"><h4 class="text-white" style="padding-top:12px;">Categories</h4></div>
+                <div class="col-md-3">
+                    <div class="float-end">
+                        <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#add"><i class="fa-solid fa-add"></i> Entry</button>
+                    </div>                        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active">Categories</li>
+    </ol>
+
+    <div class="card bg-light">
+        <div class="card-body">
+            <table id="tblCategories">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Category</th>
+                        <th style="text-align: center; width:10%">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let category of categories">
+                        <td>{{ category.category_name }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn primary" (click)="showCategory(category.id)" data-bs-toggle="modal" data-bs-target="#view"><i class="fa-solid fa-edit"></i></button>
+                                <button type="button" class="btn danger" (click)="deleteCategory(category.id)"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="add">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <h4 class="modal-title">Add Category</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+            <form>
+                <label>Category</label>
+                <input type="text" name="category_name" [(ngModel)]="category_name" class="form-control mb-3"/>
+                <div class="d-grid gap-3"><button class="btn btn-success" (click)="addCategory()"> ADD</button></div>
+            </form>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="view">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Update Category</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <label>Category</label>
+                    <input type="text" name="category_name" [(ngModel)]="category_name" class="form-control mb-3"/>
+                    <div class="d-grid gap-3"><button class="btn btn-success" (click)="updateCategory()"> UPDATE</button></div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
