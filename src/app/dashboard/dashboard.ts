@@ -746,6 +746,7 @@ export class Dashboard implements OnInit{
 	//PRINT / PDF
 	printRouting(control_no: string){
 
+		console.log(this.value_route);
 		//SETTING OF VALUES IN ARRAY
 		this.value_route.length = 0;
 
@@ -872,7 +873,7 @@ export class Dashboard implements OnInit{
 		// doc.text('Date Created:', 20, 75);
 		// doc.text(`${this.value.data[0].date}`, 55, 75);
 
-		doc.save(`ROUTING SLIP_${control_no}.pdf`);
+		//doc.save(`ROUTING SLIP_${control_no}.pdf`);
 	}
 
 	async printReceivingSlip(batch_no: string){
@@ -929,7 +930,7 @@ export class Dashboard implements OnInit{
         doc.setFont('BookAntiqua');
 		doc.text('TECS - Document Tracking System', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
 		
-		doc.setFontSize(15);
+		doc.setFontSize(20);
         doc.setFont('BookAntiqua', 'bold');
 		doc.text('Routing Slip', doc.internal.pageSize.getWidth() / 2, 27, { align: 'center' });
 		
