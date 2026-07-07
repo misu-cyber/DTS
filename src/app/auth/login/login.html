@@ -1,86 +1,182 @@
-<div class="d-flex justify-content-center align-items-center vh-100">
-	<div class="container mt-3">
-		<div class="row">
-			<div class="col-md-4">
-				<h2 align="center"><img src="../../../assets/images/TECS-DTS.png" width="100%"/></h2>
-				<form>
-					<input
-					class="form-control mb-3"
-					type="email"
-					[(ngModel)]="email"
-					name="email"
-					placeholder="Email"
-					required
-					/>
-					<input
-					class="form-control mb-3"
-					type="password"
-					[(ngModel)]="password"
-					name="password"
-					placeholder="Password"
-					(keyup.enter)="signInWithEmail()"
-					required
-					/>
-					<button type="button" class="button primary" (click)="signInWithEmail()">Sign In</button>
-				</form>
-			</div>
-			<div class="col-md-8">
-				<div class="input-group mb-3">
-					<input type="text" class="form-control" name="search" [(ngModel)]="search" placeholder="Search keyword" (keyup.enter)="fetchDocs()">
-					<button class="btn btn-success" type="button" (click)="fetchDocs()"><i class="fa-solid fa-magnifying-glass"></i></button>
+<!-- NORMAL VIEW -->
+<div class="d-none d-md-block">
+	<div class="d-flex justify-content-center align-items-center vh-100">
+		<div class="container mt-3">
+			<div class="row">
+				<div class="col-md-4">
+					<h2 align="center"><img src="../../../assets/images/TECS-DTS.png" width="100%"/></h2>
+					<form>
+						<input
+						class="form-control mb-3"
+						type="email"
+						[(ngModel)]="email"
+						name="email"
+						placeholder="Email"
+						required
+						/>
+						<input
+						class="form-control mb-3"
+						type="password"
+						[(ngModel)]="password"
+						name="password"
+						placeholder="Password"
+						(keyup.enter)="signInWithEmail()"
+						required
+						/>
+						<button type="button" class="button primary" (click)="signInWithEmail()">Sign In</button>
+					</form>
 				</div>
+				<div class="col-md-8">
+					<label>Search Keyword</label>
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" name="search" [(ngModel)]="search" (keyup.enter)="fetchDocs()">
+						<button class="btn btn-success" type="button" (click)="fetchDocs()"><i class="fa-solid fa-magnifying-glass"></i></button>
+					</div>
 
-				<div class="row">
-					@for (docs of result; track docs.id) {
-						<div class="col-md-3 mb-3">
-							<div class="card">
-								<div class="card-body">
-									{{docs.control_no}} <br/>
-									<b>{{docs.document_title}}</b> <br/>
-									<p>{{docs.originating_office}}</p>
-									<div class="row">
-										<div class="col-md-12">
-											@switch(docs.status) {
-												@case (1) {<span class="badge bg-secondary">Created</span>}
-												@case (2) {<span class="badge bg-primary">Released</span>}
-												@case (3) {<span class="badge bg-primary">Ongoing</span>}
-												@case (4) {<span class="badge bg-success">Completed</span>}
-												@case (5) {<span class="badge bg-danger">Cancelled</span>}
-											}
-										</div>
-										<div class="col-md-12">
-											@switch (docs.isConfidential) {
-												@case (true) {<span class="badge bg-danger">Confidential</span>}
-												@case (false) {<span class="badge bg-secondary">Public</span>}
-											}
-										</div>
-										<div class="col-md-12">
-											<!-- <div class="float-end"> -->
-												<button class="button primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
-											<!-- </div> -->
+					<div class="row">
+						@for (docs of result; track docs.id) {
+							<div class="col-md-3 mb-3">
+								<div class="card">
+									<div class="card-body">
+										{{docs.control_no}} <br/>
+										<b>{{docs.document_title}}</b> <br/>
+										<p>{{docs.originating_office}}</p>
+										<div class="row">
+											<div class="col-md-12">
+												@switch(docs.status) {
+													@case (1) {<span class="badge bg-secondary">Created</span>}
+													@case (2) {<span class="badge bg-primary">Released</span>}
+													@case (3) {<span class="badge bg-primary">Ongoing</span>}
+													@case (4) {<span class="badge bg-success">Completed</span>}
+													@case (5) {<span class="badge bg-danger">Cancelled</span>}
+												}
+											</div>
+											<div class="col-md-12">
+												@switch (docs.isConfidential) {
+													@case (true) {<span class="badge bg-danger">Confidential</span>}
+													@case (false) {<span class="badge bg-secondary">Public</span>}
+												}
+											</div>
+											<div class="col-md-12">
+												<!-- <div class="float-end"> -->
+													<button class="button primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
+												<!-- </div> -->
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					}
-					<nav>
-						<ul class="pagination justify-content-center">
-							<li class="page-item" [class.disabled]="currentPage === 1">
-								<button	class="page-link" (click)="previousPage()">Previous</button>
-							</li>
-
-							@for (page of pages; track page) {
-								<li class="page-item" [class.active]="page === currentPage">
-									<button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+						}
+						<nav>
+							<ul class="pagination justify-content-center">
+								<li class="page-item" [class.disabled]="currentPage === 1">
+									<button	class="page-link" (click)="previousPage()">Previous</button>
 								</li>
-							}
 
-							<li class="page-item" [class.disabled]="currentPage === totalPages">
-								<button	class="page-link" (click)="nextPage()">Next</button>
-							</li>
-						</ul>
-					</nav>
+								@for (page of pages; track page) {
+									<li class="page-item" [class.active]="page === currentPage">
+										<button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+									</li>
+								}
+
+								<li class="page-item" [class.disabled]="currentPage === totalPages">
+									<button	class="page-link" (click)="nextPage()">Next</button>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- MOBILE VIEW-->
+<div class="d-block d-md-none">
+	<div class="d-flex justify-content-center align-items-center vh-100">
+		<div class="container mt-3">
+			<div class="row">
+				<div class="col-md-4">
+					<h2 align="center"><img src="../../../assets/images/TECS-DTS.png" width="100%"/></h2>
+					<form>
+						<input
+						class="form-control mb-3"
+						type="email"
+						[(ngModel)]="email"
+						name="email"
+						placeholder="Email"
+						required
+						/>
+						<input
+						class="form-control mb-3"
+						type="password"
+						[(ngModel)]="password"
+						name="password"
+						placeholder="Password"
+						(keyup.enter)="signInWithEmail()"
+						required
+						/>
+						<button type="button" class="button primary" (click)="signInWithEmail()">Sign In</button>
+					</form>
+				</div>
+				<div class="col-md-8" style="padding-top: 10%">
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" name="search" [(ngModel)]="search" placeholder="Search keyword" (keyup.enter)="fetchDocs()">
+						<button class="btn btn-success" type="button" (click)="fetchDocs()"><i class="fa-solid fa-magnifying-glass"></i></button>
+					</div>
+
+					<div class="row">
+						@for (docs of result; track docs.id) {
+							<div class="col-md-3 mb-3">
+								<div class="card">
+									<div class="card-body">
+										{{docs.control_no}} <br/>
+										<b>{{docs.document_title}}</b> <br/>
+										<p>{{docs.originating_office}}</p>
+										<div class="row">
+											<div class="col-md-12">
+												@switch(docs.status) {
+													@case (1) {<span class="badge bg-secondary">Created</span>}
+													@case (2) {<span class="badge bg-primary">Released</span>}
+													@case (3) {<span class="badge bg-primary">Ongoing</span>}
+													@case (4) {<span class="badge bg-success">Completed</span>}
+													@case (5) {<span class="badge bg-danger">Cancelled</span>}
+												}
+											</div>
+											<div class="col-md-12">
+												@switch (docs.isConfidential) {
+													@case (true) {<span class="badge bg-danger">Confidential</span>}
+													@case (false) {<span class="badge bg-secondary">Public</span>}
+												}
+											</div>
+											<div class="col-md-12">
+												<!-- <div class="float-end"> -->
+													<button class="button primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
+												<!-- </div> -->
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+						<nav>
+							<ul class="pagination justify-content-center">
+								<li class="page-item" [class.disabled]="currentPage === 1">
+									<button	class="page-link" (click)="previousPage()">Previous</button>
+								</li>
+
+								@for (page of pages; track page) {
+									<li class="page-item" [class.active]="page === currentPage">
+										<button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+									</li>
+								}
+
+								<li class="page-item" [class.disabled]="currentPage === totalPages">
+									<button	class="page-link" (click)="nextPage()">Next</button>
+								</li>
+							</ul>
+						</nav>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -88,9 +184,8 @@
 </div>
 
 
-
 <div class="modal" id="view">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-xl">
     	<div class="modal-content">
 
       		<div class="modal-header">

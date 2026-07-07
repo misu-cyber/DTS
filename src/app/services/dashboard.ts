@@ -128,6 +128,14 @@ export class DashboardService {
 		return await this.supabase.schema('dts').from('docs').update({isActive: false}).eq('control_no', control_no);
 	}
 
+	async getDocumentsSearch(from: number, to: number, search: string, empID?: string){
+		return await this.supabase.schema('dts').from('search_document').select('*', { count: 'exact' })
+					 .or(`control_no.ilike.%${search}%, document_title.ilike.%${search}%`)
+					 .eq('route_to', empID)
+					 .range(from, to);
+	}
+
+
 	// DOCUMENT ATTACHMENT 
   	// | ----------------------------------------------------------- |
 	

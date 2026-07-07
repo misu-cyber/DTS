@@ -94,4 +94,23 @@ export class LibrariesService {
     	return await this.supabase.schema('dts').from('document_type').select()
     	.eq('isActive', true).order('id', { ascending: false });
   	}
+
+	//USER ROLE
+	// | ----------------------------------------------------------- |
+
+	async add_user_role(empID: number, created_by: number){
+		return await this.supabase.schema('dts').from('user_roles').insert({
+			c_empID: empID, created_by: created_by, role: 1
+		});
+	}
+
+	async delete_user_role(id: number){
+		return await this.supabase.schema('dts').from('user_roles').update({
+		isActive: false}).eq('id', id);
+	}
+
+	async get_user_role(){
+    	return await this.supabase.schema('dts').from('users').select()
+    	.eq('isActive', true).order('id', { ascending: false });
+  	}
 }

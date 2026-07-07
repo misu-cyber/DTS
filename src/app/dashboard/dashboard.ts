@@ -80,6 +80,8 @@ export class Dashboard implements OnInit{
 	forRelease: any;
 
 	release_remarks: any;
+	document_complete: any;
+	document_revoke: any;
 
 	createddocs: any;
 	completeddocs: any;
@@ -87,6 +89,7 @@ export class Dashboard implements OnInit{
 	releasedocs: any;
 	receiveddocs: any;
 	releasedbatch: any;
+	searchdocs: any;
 
 	pageSize = 8;
 	currentPageCreated = 1;
@@ -104,6 +107,13 @@ export class Dashboard implements OnInit{
 	currentPageCancelled = 1;
 	totalPagesCancelled = 0;
 	totalRecordsCancelled = 0;
+
+	currentPage = 1;
+	totalPages = 0;
+	totalRecords = 0;
+
+	search: any;
+	count_notif: any;
 
 	day: any;
 
@@ -333,6 +343,8 @@ export class Dashboard implements OnInit{
 			this.currentPageReceived = page;
 		}
 
+		this.count_notif = count;
+
 		// this.result = await this.dashboardService.get_received_document(localStorage.getItem('empID')?.toString());
 		// this.receiveddocs = this.result.data;
 		this.cdr.detectChanges();
@@ -377,6 +389,48 @@ export class Dashboard implements OnInit{
 		}, 0);
 		this.cdr.detectChanges();
 	}
+
+	async fetchDocs(page: number=1){
+		const from = (page - 1) * this.pageSize;
+  		const to = from + this.pageSize - 1;
+
+		const { data, count, error } = await this.dashboardService.getDocumentsSearch(from, to, this.search, localStorage.getItem('empID')?.toString())
+
+		if (!error) {
+			this.searchdocs = data ?? [];
+			this.totalRecords = count ?? 0;
+			this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+			this.currentPage = page;
+		}
+
+		this.cdr.detectChanges();
+	}
+
+		nextPage() {
+			if (this.currentPage < this.totalPages) {
+				this.fetchDocs(this.currentPage + 1);
+			}
+			this.cdr.detectChanges();
+		}
+
+		previousPage() {
+			if (this.currentPage > 1) {
+				this.fetchDocs(this.currentPage - 1);
+			}
+			this.cdr.detectChanges();
+		}
+
+		goToPage(page: number) {
+			this.fetchDocs(page);
+			this.cdr.detectChanges();
+		}
+
+		get pages(): number[] {
+			return Array.from(
+				{ length: this.totalPages },
+				(_, i) => i + 1
+			);
+		}
 
 
 	//TRANSACTIONS
@@ -684,7 +738,7 @@ export class Dashboard implements OnInit{
 					sequence_no: this.value.data[0].sequence_no + 1,
 					date: this.formattedDate,
 					time: this.formattedTime,
-					remarks: 'Document completed',
+					remarks: this.document_complete,
 					created_by: Number(localStorage.getItem('empID'))
 				});
 		
@@ -732,7 +786,7 @@ export class Dashboard implements OnInit{
 					sequence_no: this.value.data[0].sequence_no + 1,
 					date: this.formattedDate,
 					time: this.formattedTime,
-					remarks: 'Document cancelled',
+					remarks: this.document_revoke,
 					created_by: Number(localStorage.getItem('empID'))
 				});
 		
@@ -786,17 +840,17 @@ export class Dashboard implements OnInit{
 		});
 
 		this.value_route.push({
-			title: "Document Title",
+			title: "Title",
 			value: this.title
 		});
 
 		this.value_route.push({
-			title: "Document Code",
+			title: "Code",
 			value: this.code
 		});
 
 		this.value_route.push({
-			title: "Document Type",
+			title: "Type",
 			value: this.docType
 		});
 
