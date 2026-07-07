@@ -109,6 +109,7 @@
 												@case (1) {<span class="badge bg-secondary">Created</span>}
 												@case (2) {<span class="badge bg-primary">Released</span>}
 												@case (3) {<span class="badge bg-primary">Ongoing</span>}
+												@case (6) {<span class="badge bg-primary">Transferred</span>}
 											}
 										</div>
 										<div class="col-md-12">
@@ -343,7 +344,24 @@
 							<option value="{{category.id}}">{{ category.category_name}}</option>
 						}
 					</select>
-					<label>Remarks</label>
+
+					<div class="mb-3">
+						<label>Action Needed <span class="text-danger">*</span></label><br/>
+						<div class="form-check form-check-inline">
+							<input type="radio" class="form-check-input" id="radio1" name="optradio" value="1" [(ngModel)]="action" checked>For Review
+							<label class="form-check-label" for="radio1"></label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input type="radio" class="form-check-input" id="radio2" name="optradio" value="2" [(ngModel)]="action">For Approval
+							<label class="form-check-label" for="radio2"></label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input type="radio" class="form-check-input" id="radio3" name="optradio" value="3" [(ngModel)]="action">For Information
+							<label class="form-check-label" for="radio3"></label>
+						</div>
+					</div>
+
+					<label>Specific Requests </label>
 					<textarea name="remarks" [(ngModel)]="remarks" class="form-control mb-3"></textarea>
 
 					<hr/>
@@ -449,6 +467,7 @@
 									@case (3) {Ongoing}
 									@case (4) {Completed}
 									@case (5) {Cancelled}
+									@case (6) {Transferred}
 								}
 							</td>
 							<td>
@@ -585,6 +604,28 @@
 							}
 						</tbody>
 					</table>
+				</div>
+      		</div>
+
+    	</div>
+  	</div>
+</div>
+
+<div class="modal" id="search">
+	<div class="modal-dialog">
+    	<div class="modal-content">
+
+      		<div class="modal-header">
+        		<h4 class="modal-title">Search Document</h4>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal" (click)="reloadPage()"></button>
+      		</div>
+
+      		<div class="modal-body">
+        		<div class="row">
+					<div class="col-md-12 mb-3">
+						<input type="text" class="form-control" name="document" [(ngModel)]="document" placeholder="xxxxxxxx-xxx" (keyup.enter)="receiveDocument()"/>
+					</div>
+					<div class="d-grid gap-3"><button class="btn primary" (click)="receiveDocument()"> RECEIVE</button></div>
 				</div>
       		</div>
 

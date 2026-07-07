@@ -67,9 +67,10 @@ export class Dashboard implements OnInit{
 	docType: any;
 	confidential: any;
 	attachment: any;
-	route: any;
+	route: any[] = [];
 	status: any
 	batch_no: any;
+	action = "1";
 
 	document: any;
 
@@ -397,11 +398,12 @@ export class Dashboard implements OnInit{
 				document_type: this.docType,
 				category: this.category,
 				office: this.employee.c_office,
-				remarks: '',
+				remarks: this.remarks,
 				confidential: this.confidential,
 				date: this.formattedDate,
 				created_by: Number(localStorage.getItem('empID')),
-				sequence_no: 1
+				sequence_no: 1,
+				action: Number(this.action)
 			});
 
 			this.result_routes = await this.dashboardService.create_route({
@@ -440,11 +442,12 @@ export class Dashboard implements OnInit{
 				document_type: this.docType,
 				category: this.category,
 				office: this.employee.c_office,
-				remarks: '',
+				remarks: this.remarks,
 				confidential: this.confidential,
 				date: this.formattedDate,
 				created_by: Number(localStorage.getItem('empID')),
-				sequence_no: 1
+				sequence_no: 1,
+				action: Number(this.action)
 			});
 
 			this.result_routes = await this.dashboardService.create_route({
@@ -512,6 +515,7 @@ export class Dashboard implements OnInit{
 		// 	break;
 		// }
 
+		this.route = []
 		this.value = await this.dashboardService.get_document_detail(id);
 
 		this.control_no = this.value.data[0].control_no
@@ -522,12 +526,26 @@ export class Dashboard implements OnInit{
 		this.remarks = this.value.data[0].remarks
 		this.confidential = this.value.data[0].isConfidential
 		this.status = this.value.data[0].status
+		this.action = this.value.data[0].action
 
 		this.result_attachments = await this.dashboardService.get_attachment_list(this.control_no)
 		this.result_routes = await this.dashboardService.get_routes_list(this.control_no)
 
 		this.attachment = this.result_attachments.data
-		this.route = this.result_routes.data
+		//this.route = this.result_routes.data
+
+		this.result_routes.data.forEach((x: any) => {
+			this.route.push({
+				date: x.date,
+				time: this.formatTime(x.date, x.time),
+				status: x.status,
+				office: x.office,
+				personnel: x.personnel,
+				remarks: x.remarks
+			})
+		})
+
+		console.log(this.route)
 		this.cdr.detectChanges();
 	}
 
@@ -746,6 +764,18 @@ export class Dashboard implements OnInit{
 	//PRINT / PDF
 	printRouting(control_no: string){
 
+		let attach = '';
+		for(let y=0; y<Object.keys(this.attachment).length; y++){
+			
+			if(y != Object.keys(this.attachment).length - 1)
+			{
+				attach += this.attachment[y].attachment_name;
+				attach += ', ';
+			} else {
+				attach += this.attachment[y].attachment_name;
+			}
+		}
+
 		console.log(this.value_route);
 		//SETTING OF VALUES IN ARRAY
 		this.value_route.length = 0;
@@ -772,12 +802,22 @@ export class Dashboard implements OnInit{
 
 		this.value_route.push({
 			title: "Attachments",
-			value: this.code
+			value: attach
 		});
 
 		this.value_route.push({
 			title: "Originating Office",
 			value: this.value.data[0].originating_office
+		});
+
+		this.value_route.push({
+			title: "Remarks",
+			value: this.action
+		});
+
+		this.value_route.push({
+			title: "Specific Requests",
+			value: this.remarks
 		});
 
 		this.value_route.push({
@@ -789,6 +829,7 @@ export class Dashboard implements OnInit{
 			title: "Date Created",
 			value: this.value.data[0].date
 		});
+
 
 		// SETTING BARCODE
 		const canvas = document.createElement('canvas');
@@ -802,7 +843,7 @@ export class Dashboard implements OnInit{
 		const img = new Image();
 		img.src = 'assets/images/TEC_B.png';
 	
-		doc.setFontSize(12);
+		doc.setFontSize(10);
         doc.setFont('BookAntiqua');
 
 		doc.addImage(
@@ -810,7 +851,7 @@ export class Dashboard implements OnInit{
 			'PNG',
 			15,
 			10,
-			55,
+			50,
 			15
 		);
 
@@ -838,11 +879,11 @@ export class Dashboard implements OnInit{
 			body,
 			styles: {
 				font: 'BookAntiqua',
-				fontSize: 9,
+				fontSize: 12,
 				cellPadding: 0.5,
 			},
 			columnStyles: {
-				0: { halign: 'left', cellWidth: 40},
+				0: { halign: 'left', cellWidth: 40, fontStyle: 'bold'},
 				1: { halign: 'left' }
 			}
 		})
@@ -873,7 +914,26 @@ export class Dashboard implements OnInit{
 		// doc.text('Date Created:', 20, 75);
 		// doc.text(`${this.value.data[0].date}`, 55, 75);
 
-		//doc.save(`ROUTING SLIP_${control_no}.pdf`);
+		const tableY = (doc as any).lastAutoTable.finalY;
+
+		doc.rect(15, tableY + 2, 180, 45, 'S');
+		doc.rect(15, tableY + 50, 180, 45, 'S');
+		doc.rect(15, tableY + 98, 180, 45, 'S');
+		doc.rect(15, tableY + 146, 180, 45, 'S');
+
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 7);
+		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 12);
+
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 55);
+		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 60);
+
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 103);
+		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 108);
+
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 151);
+		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 156);
+
+		doc.save(`ROUTING SLIP_${control_no}.pdf`);
 	}
 
 	async printReceivingSlip(batch_no: string){

@@ -55,7 +55,8 @@ export class DashboardService {
 		return await this.supabase.schema('dts').from('document_details').select('*', { count: 'exact' })
 					 .order('control_no', {ascending: false})
 					 .eq('document_holder', empID)
-					 .eq('status', 3)
+					 //.eq('status', 3)
+					 .or('status.eq.3,status.eq.6')
 					 //.or(`document_holder.eq.${empID},created_by.eq.${empID}`)
 					 .range(from, to);
 	}
@@ -78,7 +79,7 @@ export class DashboardService {
 		return await this.supabase.schema('dts').from('document_details').select()
 					 .order('control_no', {ascending: false})
 					 .eq('document_holder', empID)
-					 .or('status.eq.1,status.eq.3');
+					 .or('status.eq.1,status.eq.3,status.eq.6');
 	}
 
 	async get_document_detail(id: number){
@@ -98,7 +99,8 @@ export class DashboardService {
 			sequence_no: payload.sequence_no, 
 			isConfidential: payload.confidential, 
 			date: payload.date, 
-			created_by: payload.created_by 
+			created_by: payload.created_by,
+			action: payload.action
 		});
 	}
 

@@ -10,6 +10,7 @@ export type addDocument ={
     sequence_no: number;
     date: string;
     created_by: number;
+    action: number;
 }
 
 export type updateDocument ={

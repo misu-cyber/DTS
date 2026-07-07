@@ -252,7 +252,7 @@ export class Admin implements OnInit{
 		this.result_routes = await this.dashboardService.create_route({
 			control_no: this.control_no,
 			receiving_office: this.transfer_office.c_office,
-			status: 3,
+			status: 6,
 			sequence_no: this.value.data[0].sequence_no + 1,
 			date: this.formattedDate,
 			time: this.formattedTime,
