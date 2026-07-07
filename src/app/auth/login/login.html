@@ -27,7 +27,7 @@
 					</form>
 				</div>
 				<div class="col-md-8">
-					<label>Search Keyword</label>
+					<label>Search Document</label>
 					<div class="input-group mb-3">
 						<input type="text" class="form-control" name="search" [(ngModel)]="search" (keyup.enter)="fetchDocs()">
 						<button class="btn btn-success" type="button" (click)="fetchDocs()"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -121,7 +121,7 @@
 				</div>
 				<div class="col-md-8" style="padding-top: 10%">
 					<div class="input-group mb-3">
-						<input type="text" class="form-control" name="search" [(ngModel)]="search" placeholder="Search keyword" (keyup.enter)="fetchDocs()">
+						<input type="text" class="form-control" name="search" [(ngModel)]="search" placeholder="Search document" (keyup.enter)="fetchDocs()">
 						<button class="btn btn-success" type="button" (click)="fetchDocs()"><i class="fa-solid fa-magnifying-glass"></i></button>
 					</div>
 
