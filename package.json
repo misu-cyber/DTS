@@ -17,6 +17,8 @@
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
     "@supabase/supabase-js": "^2.108.1",
+    "@zxing/browser": "^0.2.1",
+    "@zxing/library": "^0.23.0",
     "datatables.net": "^2.3.8",
     "datatables.net-dt": "^2.3.8",
     "jquery": "^4.0.0",

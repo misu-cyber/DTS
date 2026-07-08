@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, Signal, WritableSignal, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, signal, Signal, WritableSignal, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UserService } from '../services/user';
@@ -10,6 +10,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import JsBarcode from 'jsbarcode';
+import { BrowserMultiFormatReader, IScannerControls } from '@zxing/browser';
 
 declare var $: any;
 
@@ -138,6 +139,14 @@ export class Dashboard implements OnInit{
 	date = this.now.getFullYear() + String(this.now.getMonth() + 1).padStart(2, '0') + String(this.now.getDate()).padStart(2, '0');
 	
 
+	@ViewChild('video')
+  	video!: ElementRef<HTMLVideoElement>;
+
+  	barcode = '';
+
+  	codeReader = new BrowserMultiFormatReader();
+	controls!: IScannerControls;
+
 	// FUNCTIONS 
   	// | ----------------------------------------------------------- |
 	ngOnInit() {
@@ -151,6 +160,7 @@ export class Dashboard implements OnInit{
 		this.fetchDocRelease();
 		this.fetchDocReceived(1);
 		this.fetchReleasedBatch();
+		//this.startScanner();
 		this.cdr.detectChanges();
   	}
 
@@ -812,6 +822,24 @@ export class Dashboard implements OnInit{
 			}
 		});
 		
+	}
+
+	async startScanner() {
+
+		const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+
+		await this.codeReader.decodeFromVideoDevice(
+		devices[0].deviceId,
+		this.video.nativeElement,
+		(result, error) => {
+			if (result) {
+				this.document = '';
+				this.document = result.getText();
+				// this.controls.stop();
+			}
+		}
+		);
+		this.cdr.detectChanges();
 	}
 
 

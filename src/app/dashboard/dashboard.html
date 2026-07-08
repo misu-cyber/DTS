@@ -333,11 +333,11 @@
 
       		<div class="modal-body">
         		<form>
-            		<label>Document Title <span class="text-danger">*</span></label>
+            		<label>Title <span class="text-danger">*</span></label>
             		<input type="text" name="title"[(ngModel)]="title" class="form-control mb-3"/>
-            		<label>Document Code</label>
+            		<label>Code</label>
             		<input type="text" name="code" [(ngModel)]="code" class="form-control mb-3"/>
-            		<label>Document Type <span class="text-danger">*</span></label>
+            		<label>Type <span class="text-danger">*</span></label>
 					<select class="form-select mb-3" [(ngModel)]="docType" name="docType">
 						@for (docType of doctypes; track docType.id) {
 							<option value="{{docType.id}}">{{ docType.type_name}}</option>
@@ -570,8 +570,18 @@
 					<div class="col-md-12 mb-3">
 						<input type="text" class="form-control" name="document" [(ngModel)]="document" placeholder="xxxxxxxx-xxx" (keyup.enter)="receiveDocument()"/>
 					</div>
-					<div class="d-grid gap-3"><button class="btn primary" (click)="receiveDocument()"> RECEIVE</button></div>
+					<div class="btn btn-group">
+						<button class="warning" (click)="startScanner()"><i class="fa fa-camera"></i></button>
+						<div class="d-grid gap-3"><button class="btn primary" (click)="receiveDocument()"> RECEIVE</button></div>
+					</div>
+					
 				</div>
+
+				<div>
+					<video #video width="100%" autoplay></video>
+					
+				</div>
+				
       		</div>
 
     	</div>
