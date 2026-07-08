@@ -69,9 +69,13 @@
 				<div class="col-md-12">
 					<button class="btn primary" type="button" data-bs-toggle="modal" data-bs-target="#search"><i class="fa-solid fa-search"></i></button>
 					<button class="btn primary" type="button" data-bs-toggle="modal" data-bs-target="#logs"><i class="fa-solid fa-rectangle-list"></i></button>
-					<button class="btn primary" type="button" data-bs-toggle="modal" data-bs-target="#release"><i class="fa-solid fa-upload"></i> </button>
-					<button class="btn primary" type="button" data-bs-toggle="modal" data-bs-target="#receive"><i class="fa-solid fa-download"></i> </button>
-					<button class="btn success" type="button" data-bs-toggle="modal" data-bs-target="#create"><i class="fa-solid fa-plus"></i> </button>
+					<div class="float-end"><button class="btn success" type="button" data-bs-toggle="modal" data-bs-target="#create"><i class="fa-solid fa-plus"></i></button></div>
+				</div>
+				<div class="col-md-12">
+					<div class="d-flex gap-2">
+						<button class="btn primary flex-fill" type="button" data-bs-toggle="modal" data-bs-target="#release"><i class="fa-solid fa-upload"></i> Release</button>
+						<button class="btn primary flex-fill" type="button" data-bs-toggle="modal" data-bs-target="#receive"><i class="fa-solid fa-download"></i> Receive</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -570,16 +574,16 @@
 					<div class="col-md-12 mb-3">
 						<input type="text" class="form-control" name="document" [(ngModel)]="document" placeholder="xxxxxxxx-xxx" (keyup.enter)="receiveDocument()"/>
 					</div>
-					<div class="btn btn-group">
-						<button class="warning" (click)="startScanner()"><i class="fa fa-camera"></i></button>
-						<div class="d-grid gap-3"><button class="btn primary" (click)="receiveDocument()"> RECEIVE</button></div>
-					</div>
-					
+					<div class="col-md-12">
+    					<div class="d-flex gap-2">
+							<button class="warning" (click)="startScanner()"><i class="fa fa-camera"></i></button>
+							<button class="btn primary flex-fill" (click)="receiveDocument()"> RECEIVE</button>
+						</div>
+					</div>					
 				</div>
 
 				<div>
-					<video #video width="100%" autoplay></video>
-					
+					<video #video width="100%" style="height:200px; object-fit:cover;" autoplay></video>
 				</div>
 				
       		</div>
