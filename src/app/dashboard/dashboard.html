@@ -377,6 +377,7 @@
 
 					<label>Attachments </label>
 					@for (attachment of attachments; track attachment.id) {
+
 						<div class="form-check">
 							<input type="checkbox" class="form-check-input" id="attachment" name="attachment" [(ngModel)]="attachment.selected" value="{{attachment.id}}">
 							<label class="form-check-label" for="attachment">{{attachment.attachment_name}}</label>

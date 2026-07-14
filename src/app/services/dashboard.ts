@@ -162,7 +162,7 @@ export class DashboardService {
 
 	async get_routes_list(control_no: string){
 		return await this.supabase.schema('dts').from('route_list').select().eq('control_no', control_no)
-					 .eq('isActive', true).order('status', {ascending: true})
+					 .eq('isActive', true).order('sequence_no', {ascending: true})
 	}
 
 	async get_batch_no(){

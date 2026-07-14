@@ -6,17 +6,19 @@ import { DashboardService } from '../services/dashboard';
 
 import swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import JsBarcode from 'jsbarcode';
 import { BrowserMultiFormatReader, IScannerControls } from '@zxing/browser';
+import 'select2';
 
 declare var $: any;
 
 @Component({
   selector: 'app-dashboard',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -79,6 +81,7 @@ export class Dashboard implements OnInit{
 	categories: any;
 	doctypes: any;
 	forRelease: any;
+	selectedAttachments : any[]=[];	
 
 	release_remarks: any;
 	document_complete: any;
@@ -146,6 +149,7 @@ export class Dashboard implements OnInit{
 
   	codeReader = new BrowserMultiFormatReader();
 	controls!: IScannerControls;
+	
 
 	// FUNCTIONS 
   	// | ----------------------------------------------------------- |
@@ -164,7 +168,7 @@ export class Dashboard implements OnInit{
 		this.cdr.detectChanges();
   	}
 
-	
+
 
 	//FETCH DATA
 	async fetchUser() {
