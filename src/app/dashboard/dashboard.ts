@@ -407,10 +407,13 @@ export class Dashboard implements OnInit{
 		const { data, count, error } = await this.dashboardService.getDocumentsSearch(from, to, this.search, localStorage.getItem('empID')?.toString())
 
 		if (!error) {
-			this.searchdocs = data ?? [];
 			this.totalRecords = count ?? 0;
 			this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
 			this.currentPage = page;
+
+			this.searchdocs = Array.from(
+				new Map(data.map(item => [item.id, item])).values()
+			) ?? [];
 		}
 
 		this.cdr.detectChanges();
@@ -858,7 +861,6 @@ export class Dashboard implements OnInit{
 			}
 		}
 
-		console.log(this.value_route);
 		//SETTING OF VALUES IN ARRAY
 		this.value_route.length = 0;
 

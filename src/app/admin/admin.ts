@@ -58,6 +58,7 @@ export class Admin implements OnInit{
 	attachment: any;
 	route: any;
 	status: any
+	action = "1";
 
 	now: Date = new Date();
 	formattedTime: string = new Intl.DateTimeFormat('en-US', {
@@ -107,6 +108,7 @@ export class Admin implements OnInit{
 				let i = 0;
 				
 				if(search){
+					this.data = [];
 					const{data, count, error} = await this.adminService.getDocumentsSearch(from, to, search);
 					
 					data?.forEach(x => {
@@ -129,6 +131,7 @@ export class Admin implements OnInit{
 						data: this.data ?? []
 					});
 				} else {
+					this.data = [];
 					const{data, count, error} = await this.adminService.getDocuments(from, to);
 
 					data?.forEach(x => {
@@ -219,6 +222,7 @@ export class Admin implements OnInit{
 	//TRANSACTIONS
 	async viewDocument(id: number, status: number){
 
+		this.route = [];
 		this.value = await this.dashboardService.get_document_detail(id);
 
 		this.control_no = this.value.data[0].control_no
@@ -229,12 +233,25 @@ export class Admin implements OnInit{
 		this.remarks = this.value.data[0].remarks
 		this.confidential = this.value.data[0].isConfidential
 		this.status = this.value.data[0].status
+		this.action = this.value.data[0].action
 
 		this.result_attachments = await this.dashboardService.get_attachment_list(this.control_no)
 		this.result_routes = await this.dashboardService.get_routes_list(this.control_no)
 
 		this.attachment = this.result_attachments.data
-		this.route = this.result_routes.data
+		//this.route = this.result_routes.data
+
+		this.result_routes.data.forEach((x: any) => {
+			this.route.push({
+				date: x.date,
+				time: this.formatTime(x.date, x.time),
+				status: x.status,
+				office: x.office,
+				personnel: x.personnel,
+				remarks: x.remarks
+			})
+		})
+
 		this.cdr.detectChanges();
 	}
 
@@ -379,6 +396,18 @@ export class Admin implements OnInit{
 	//PRINT / PDF
 	printRouting(control_no: string){
 
+		let attach = '';
+		for(let y=0; y<Object.keys(this.attachment).length; y++){
+			
+			if(y != Object.keys(this.attachment).length - 1)
+			{
+				attach += this.attachment[y].attachment_name;
+				attach += ', ';
+			} else {
+				attach += this.attachment[y].attachment_name;
+			}
+		}
+		
 		//SETTING OF VALUES IN ARRAY
 		this.value_route.length = 0;
 
@@ -388,28 +417,38 @@ export class Admin implements OnInit{
 		});
 
 		this.value_route.push({
-			title: "Document Title",
+			title: "Title",
 			value: this.title
 		});
 
 		this.value_route.push({
-			title: "Document Code",
+			title: "Code",
 			value: this.code
 		});
 
 		this.value_route.push({
-			title: "Document Type",
+			title: "Type",
 			value: this.docType
 		});
 
 		this.value_route.push({
 			title: "Attachments",
-			value: this.code
+			value: attach
 		});
 
 		this.value_route.push({
 			title: "Originating Office",
 			value: this.value.data[0].originating_office
+		});
+
+		this.value_route.push({
+			title: "Remarks",
+			value: this.action
+		});
+
+		this.value_route.push({
+			title: "Specific Requests",
+			value: this.remarks
 		});
 
 		this.value_route.push({
@@ -434,7 +473,7 @@ export class Admin implements OnInit{
 		const img = new Image();
 		img.src = 'assets/images/TEC_B.png';
 	
-		doc.setFontSize(12);
+		doc.setFontSize(10);
 		doc.setFont('BookAntiqua');
 
 		doc.addImage(
@@ -442,7 +481,7 @@ export class Admin implements OnInit{
 			'PNG',
 			15,
 			10,
-			55,
+			50,
 			15
 		);
 
@@ -470,15 +509,77 @@ export class Admin implements OnInit{
 			body,
 			styles: {
 				font: 'BookAntiqua',
-				fontSize: 9,
+				fontSize: 12,
 				cellPadding: 0.5,
 			},
 			columnStyles: {
-				0: { halign: 'left', cellWidth: 40},
+				0: { halign: 'left', cellWidth: 40, fontStyle: 'bold'},
 				1: { halign: 'left' }
 			}
 		})
 
+
+		// doc.text('Control No.:', 20, 40);
+		// doc.text(`${this.control_no}`, 55, 40);
+
+		// doc.text('Document Title:', 20, 45);
+		// doc.text(`${this.title}`, 55, 45);
+
+		// doc.text('Document Code:', 20, 50);
+		// if(this.code == null){doc.text('', 55, 50);}
+		// else{doc.text(`${this.code}`, 55, 50);}
+		
+		// doc.text('Document Type:', 20, 55);
+		// doc.text(`${this.docType}`, 55, 55);
+
+		// doc.text('Attachment/s:', 20, 60);
+		// doc.text(``, 55,60);
+
+		// doc.text('Originating Office:', 20, 65);
+		// doc.text(`${this.value.data[0].originating_office}`, 55, 65);
+
+		// doc.text('Created by:', 20, 70);
+		// doc.text(`${this.value.data[0].fullname_creator}`, 55, 70);
+
+		// doc.text('Date Created:', 20, 75);
+		// doc.text(`${this.value.data[0].date}`, 55, 75);
+
+		const tableY = (doc as any).lastAutoTable.finalY;
+
+		doc.rect(15, tableY + 2, 180, 45, 'S');
+		doc.rect(15, tableY + 50, 180, 45, 'S');
+		doc.rect(15, tableY + 98, 180, 45, 'S');
+		doc.rect(15, tableY + 146, 180, 45, 'S');
+
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 7);
+		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 12);
+
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 55);
+		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 60);
+
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 103);
+		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 108);
+
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 151);
+		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 156);
+
 		doc.save(`ROUTING SLIP_${control_no}.pdf`);
 	}
+
+
+	//OTHERS
+	formatTime(date:string, time: string): string{
+    
+		const datetime = new Date(`${date}T${time}`);
+
+		let result =  datetime.toLocaleTimeString('en-US', {
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true
+		});
+
+		if(result == 'Invalid Date')
+		{return ''} 
+		else { return result}
+  	}
 }

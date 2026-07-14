@@ -131,7 +131,8 @@ export class DashboardService {
 	async getDocumentsSearch(from: number, to: number, search: string, empID?: string){
 		return await this.supabase.schema('dts').from('search_document').select('*', { count: 'exact' })
 					 .or(`control_no.ilike.%${search}%, document_title.ilike.%${search}%`)
-					 .eq('route_to', empID)
+					 //.eq('route_to', empID)
+					 .or(`route_to.eq.${empID}, isConfidential.eq.false`)
 					 .range(from, to);
 	}
 
@@ -161,7 +162,7 @@ export class DashboardService {
 
 	async get_routes_list(control_no: string){
 		return await this.supabase.schema('dts').from('route_list').select().eq('control_no', control_no)
-					 .eq('isActive', true)
+					 .eq('isActive', true).order('status', {ascending: true})
 	}
 
 	async get_batch_no(){
