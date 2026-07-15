@@ -914,7 +914,7 @@ export class Dashboard implements OnInit{
 
 		this.value_route.push({
 			title: "Title",
-			value: this.title
+			value: this.title_view
 		});
 
 		this.value_route.push({
@@ -944,7 +944,7 @@ export class Dashboard implements OnInit{
 
 		this.value_route.push({
 			title: "Specific Requests",
-			value: this.remarks
+			value: this.remarks_view
 		});
 
 		this.value_route.push({

@@ -244,7 +244,7 @@ export class Admin implements OnInit{
 		this.result_routes.data.forEach((x: any) => {
 			this.route.push({
 				date: x.date,
-				time: this.formatTime(x.date, x.time),
+				time: this.formatTime(x.date, x.server_time.substring(11,19)),//this.formatTime(x.date, x.time),
 				status: x.status,
 				office: x.office,
 				personnel: x.personnel,
