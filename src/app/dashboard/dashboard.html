@@ -50,7 +50,7 @@
 					<div class="float-end">
 						<button class="btn primary" type="button" data-bs-toggle="modal" data-bs-target="#release"><i class="fa-solid fa-upload"></i> Release</button>
 						<button class="btn primary" type="button" data-bs-toggle="modal" data-bs-target="#receive"><i class="fa-solid fa-download"></i> Receive</button>
-						<button class="btn success" type="button" data-bs-toggle="modal" data-bs-target="#create"><i class="fa-solid fa-plus"></i> Create</button>
+						<button class="btn success" type="button" data-bs-toggle="modal" data-bs-target="#create" (click)="displayDropdown()"><i class="fa-solid fa-plus"></i> Create</button>
 					</div>
 				</div>
 			</div>
@@ -327,7 +327,7 @@
 </div>
 
 <div class="modal" id="create">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-dialog-scrollable">
     	<div class="modal-content">
 
       		<div class="modal-header">
@@ -348,7 +348,7 @@
 						}
 					</select>
 					<label>Category <span class="text-danger">*</span></label>
-					<select class="form-select mb-3" [(ngModel)]="category" name="category">
+					<select class="form-select mb-3" [(ngModel)]="category" name="category" id="categoryDropdown">
 						@for (category of categories; track category.id) {
 							<option value="{{category.id}}">{{ category.category_name}}</option>
 						}
@@ -361,7 +361,7 @@
 							<label class="form-check-label" for="radio1"></label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input type="radio" class="form-check-input" id="radio2" name="optradio" value="2" [(ngModel)]="action">For Approval
+							<input type="radio" class="form-check-input" id="radio2" name="optradio" value="2" [(ngModel)]="action">For Approval/Signature
 							<label class="form-check-label" for="radio2"></label>
 						</div>
 						<div class="form-check form-check-inline">
@@ -370,19 +370,21 @@
 						</div>
 					</div>
 
-					<label>Specific Requests </label>
+					<label>Remarks </label>
 					<textarea name="remarks" [(ngModel)]="remarks" class="form-control mb-3"></textarea>
 
 					<hr/>
 
 					<label>Attachments </label>
+					<select #attachmentSelect class="form-select" multiple="multiple" name="attachmentDropdown" id="attachmentDropdown">
 					@for (attachment of attachments; track attachment.id) {
-
-						<div class="form-check">
+						<option value="{{attachment.id}}">{{attachment.attachment_name}}</option>
+						<!-- <div class="form-check">
 							<input type="checkbox" class="form-check-input" id="attachment" name="attachment" [(ngModel)]="attachment.selected" value="{{attachment.id}}">
 							<label class="form-check-label" for="attachment">{{attachment.attachment_name}}</label>
-						</div>
+						</div> -->
 					}
+					</select>
 
 					<hr/>
 
@@ -422,7 +424,7 @@
 					</tr>
 					<tr>
 						<th>Title:</th>
-						<td>{{this.title}}</td>
+						<td>{{this.title_view}}</td>
 					</tr>
 					<tr>
 						<th>Code:</th>

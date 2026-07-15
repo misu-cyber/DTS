@@ -15,6 +15,7 @@ import { BrowserMultiFormatReader, IScannerControls } from '@zxing/browser';
 import 'select2';
 
 declare var $: any;
+declare const window: any;
 
 @Component({
   selector: 'app-dashboard',
@@ -33,6 +34,8 @@ export class Dashboard implements OnInit{
 	constructor(
   		private cdr: ChangeDetectorRef
 	) {}
+
+
 
 	// VARIABLES 
   	// | ----------------------------------------------------------- |
@@ -74,6 +77,8 @@ export class Dashboard implements OnInit{
 	status: any
 	batch_no: any;
 	action = "1";
+	title_view: any;
+	remarks_view: any;
 
 	document: any;
 
@@ -149,6 +154,9 @@ export class Dashboard implements OnInit{
 
   	codeReader = new BrowserMultiFormatReader();
 	controls!: IScannerControls;
+
+	@ViewChild('attachmentSelect')
+  	attachmentSelect!: ElementRef<HTMLSelectElement>;
 	
 
 	// FUNCTIONS 
@@ -168,6 +176,34 @@ export class Dashboard implements OnInit{
 		this.cdr.detectChanges();
   	}
 
+	ngAfterViewInit() {
+		this.selectedAttachments = [];
+		const $select = $(this.attachmentSelect.nativeElement);
+
+		// $select.select2({
+		// 	width: '100%',
+		// 	placeholder: 'Select Attachment',
+		// 	dropdownParent: $('#create')
+		// });
+
+		$('#create').on('shown.bs.modal', () => {
+
+			const $select = $('#attachmentDropdown');
+
+			if ($select.hasClass('select2-hidden-accessible')) {
+				$select.select2('destroy');
+			}
+
+			$select.select2({
+				dropdownParent: $('#create'),
+				width: '100%'
+			});;
+
+			$select.on('change', () => {
+				this.selectedAttachments = $select.val();
+			});
+		});
+	}
 
 
 	//FETCH DATA
@@ -449,6 +485,10 @@ export class Dashboard implements OnInit{
 			);
 		}
 
+	async displayDropdown(){
+		$('#attachmentDropdown').val([]).trigger('change');
+	}
+
 
 	//TRANSACTIONS
 	async createDocument(){
@@ -458,9 +498,9 @@ export class Dashboard implements OnInit{
 		if(this.result.data == ''){
 			this.control_no = this.date+'-'+'001'
 
-			const selectedAttachment = this.attachments.filter(
-				(attachment: { selected: any; }) => attachment.selected
-			);
+			// const selectedAttachment = this.attachments.filter(
+			// 	(attachment: { selected: any; }) => attachment.selected
+			// );
 			
 			this.result_document = await this.dashboardService.create_document({
 				control_no: this.control_no,
@@ -488,11 +528,11 @@ export class Dashboard implements OnInit{
 				created_by: Number(localStorage.getItem('empID'))
 			});
 
-			if(selectedAttachment.length > 0) {
-				for(let x = 0; x<selectedAttachment.length; x++){
+			if(this.selectedAttachments.length > 0) {
+				for(let x = 0; x<this.selectedAttachments.length; x++){
 					this.result_attachments = await this.dashboardService.create_attachment({
 						control_no: this.control_no,
-						attachment: selectedAttachment[x].id
+						attachment: this.selectedAttachments[x]
 					})
 				}
 			}
@@ -502,9 +542,9 @@ export class Dashboard implements OnInit{
 			const num = parseInt(this.result.data[0].control_no.replace(this.date + '-', '')) + 1;
 			this.control_no = this.date+'-'+num.toString().padStart(3, '0');
 
-			const selectedAttachment = this.attachments.filter(
-				(attachment: { selected: any; }) => attachment.selected
-			);
+			// const selectedAttachment = this.attachments.filter(
+			// 	(attachment: { selected: any; }) => attachment.selected
+			// );
 
 			this.result_document = await this.dashboardService.create_document({
 				control_no: this.control_no,
@@ -532,11 +572,11 @@ export class Dashboard implements OnInit{
 				created_by: Number(localStorage.getItem('empID'))
 			});
 
-			if(selectedAttachment.length > 0) {
-				for(let x = 0; x<selectedAttachment.length; x++){
+			if(this.selectedAttachments.length > 0) {
+				for(let x = 0; x<this.selectedAttachments.length; x++){
 					this.result_attachments = await this.dashboardService.create_attachment({
 						control_no: this.control_no,
-						attachment: selectedAttachment[x].id
+						attachment: this.selectedAttachments[x]
 					})
 				}
 			}
@@ -590,11 +630,11 @@ export class Dashboard implements OnInit{
 		this.value = await this.dashboardService.get_document_detail(id);
 
 		this.control_no = this.value.data[0].control_no
-		this.title = this.value.data[0].document_title
+		this.title_view = this.value.data[0].document_title
 		this.code = this.value.data[0].document_code
 		this.docType = this.value.data[0].type_name
 		this.category = this.value.data[0].category_name
-		this.remarks = this.value.data[0].remarks
+		this.remarks_view = this.value.data[0].remarks
 		this.confidential = this.value.data[0].isConfidential
 		this.status = this.value.data[0].status
 		this.action = this.value.data[0].action
@@ -608,7 +648,7 @@ export class Dashboard implements OnInit{
 		this.result_routes.data.forEach((x: any) => {
 			this.route.push({
 				date: x.date,
-				time: this.formatTime(x.date, x.time),
+				time: this.formatTime(x.date, x.server_time.substring(11,19)),//this.formatTime(x.date, x.time),
 				status: x.status,
 				office: x.office,
 				personnel: x.personnel,
@@ -616,7 +656,6 @@ export class Dashboard implements OnInit{
 			})
 		})
 
-		console.log(this.route)
 		this.cdr.detectChanges();
 	}
 
