@@ -107,8 +107,8 @@
 							<div class="card">
 								<div class="card-body">
 									{{docs.control_no}} <br/>
-									<b>{{docs.document_title}}</b> <br/>
-									<p>{{docs.originating_office}}</p>
+									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
+									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
 									<div class="row">
 										<div class="col-md-12">
 											@switch(docs.status) {
@@ -161,8 +161,8 @@
 							<div class="card">
 								<div class="card-body">
 									{{docs.control_no}} <br/>
-									<b>{{docs.document_title}}</b> <br/>
-									<p>{{docs.originating_office}}</p>
+									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
+									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
 									<div class="row">
 										<div class="col-md-12">
 											<span class="badge bg-primary">Ongoing</span>
@@ -209,8 +209,8 @@
 							<div class="card">
 								<div class="card-body">
 									{{docs.control_no}} <br/>
-									<b>{{docs.document_title}}</b> <br/>
-									<p>{{docs.originating_office}}</p>
+									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
+									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
 									<div class="row">
 										<div class="col-md-12">
 											<span class="badge bg-success">Completed</span>
@@ -257,8 +257,8 @@
 							<div class="card">
 								<div class="card-body">
 									{{docs.control_no}} <br/>
-									<b>{{docs.document_title}}</b> <br/>
-									<p>{{docs.originating_office}}</p>
+									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
+									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
 									<div class="row">
 										<div class="col-md-12">
 											<span class="badge bg-danger">Cancelled</span>
@@ -356,17 +356,17 @@
 
 					<div class="mb-3">
 						<label>Action Needed <span class="text-danger">*</span></label><br/>
-						<div class="form-check form-check-inline">
+						<div class="form-check">
 							<input type="radio" class="form-check-input" id="radio1" name="optradio" value="1" [(ngModel)]="action" checked>For Review
 							<label class="form-check-label" for="radio1"></label>
 						</div>
-						<div class="form-check form-check-inline">
-							<input type="radio" class="form-check-input" id="radio2" name="optradio" value="2" [(ngModel)]="action">For Approval/Signature
-							<label class="form-check-label" for="radio2"></label>
-						</div>
-						<div class="form-check form-check-inline">
+						<div class="form-check">
 							<input type="radio" class="form-check-input" id="radio3" name="optradio" value="3" [(ngModel)]="action">For Information
 							<label class="form-check-label" for="radio3"></label>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" id="radio2" name="optradio" value="2" [(ngModel)]="action">For Approval/Signature
+							<label class="form-check-label" for="radio2"></label>
 						</div>
 					</div>
 
@@ -651,12 +651,12 @@
 					
 					<div class="row">
 					@for (docs of searchdocs; track docs.id) {
-						<div class="col-md-3 mb-3">
+						<div class="col-md-4 mb-3">
 							<div class="card">
 								<div class="card-body">
 									{{docs.control_no}} <br/>
-									<b>{{docs.document_title}}</b> <br/>
-									<p>{{docs.originating_office}}</p>
+									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
+									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
 									<div class="row">
 										<div class="col-md-12">
 											@switch(docs.status) {
@@ -675,7 +675,9 @@
 											}
 										</div>
 										<div class="col-md-12">
-											<button class="button primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
+											<div class="float-end">
+												<button class="button primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
+											</div>
 										</div>
 									</div>
 								</div>

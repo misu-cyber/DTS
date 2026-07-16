@@ -938,12 +938,12 @@ export class Dashboard implements OnInit{
 		});
 
 		this.value_route.push({
-			title: "Remarks",
+			title: "Action Needed",
 			value: this.action
 		});
 
 		this.value_route.push({
-			title: "Specific Requests",
+			title: "Remarks",
 			value: this.remarks_view
 		});
 
@@ -1003,7 +1003,7 @@ export class Dashboard implements OnInit{
 
 		autoTable(doc, {
 			startY: 35,
-			body,
+			body: body,
 			styles: {
 				font: 'BookAntiqua',
 				fontSize: 12,
@@ -1012,6 +1012,11 @@ export class Dashboard implements OnInit{
 			columnStyles: {
 				0: { halign: 'left', cellWidth: 40, fontStyle: 'bold'},
 				1: { halign: 'left' }
+			},
+			didParseCell: (body: any) => {
+				if (body.row.index == 4 && body.column.dataKey === '1') {
+					body.cell.styles.fontSize = 11; 
+				}
 			}
 		})
 

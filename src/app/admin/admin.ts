@@ -442,12 +442,12 @@ export class Admin implements OnInit{
 		});
 
 		this.value_route.push({
-			title: "Remarks",
+			title: "Action Needed",
 			value: this.action
 		});
 
 		this.value_route.push({
-			title: "Specific Requests",
+			title: "Remarks",
 			value: this.remarks
 		});
 

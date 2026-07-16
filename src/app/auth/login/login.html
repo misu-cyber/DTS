@@ -35,12 +35,12 @@
 
 					<div class="row">
 						@for (docs of result; track docs.id) {
-							<div class="col-md-3 mb-3">
+							<div class="col-md-4 mb-3">
 								<div class="card">
 									<div class="card-body">
 										{{docs.control_no}} <br/>
-										<b>{{docs.document_title}}</b> <br/>
-										<p>{{docs.originating_office}}</p>
+										<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
+										<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
 										<div class="row">
 											<div class="col-md-12">
 												@switch(docs.status) {
@@ -127,12 +127,12 @@
 
 					<div class="row">
 						@for (docs of result; track docs.id) {
-							<div class="col-md-3 mb-3">
+							<div class="col-md-4 mb-3">
 								<div class="card">
 									<div class="card-body">
 										{{docs.control_no}} <br/>
-										<b>{{docs.document_title}}</b> <br/>
-										<p>{{docs.originating_office}}</p>
+										<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
+										<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
 										<div class="row">
 											<div class="col-md-12">
 												@switch(docs.status) {

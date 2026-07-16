@@ -7,11 +7,12 @@ import { FormsModule } from '@angular/forms';
 import DataTable from 'datatables.net';
 
 import swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
 	selector: 'app-login',
-  	imports: [FormsModule],
+  	imports: [FormsModule, CommonModule],
   	templateUrl: './login.html',
   	styleUrl: './login.scss',
 })
@@ -146,6 +147,7 @@ export class Login implements AfterViewInit {
 
 	async viewDocument(id: number, status: number){
 
+		this.route = [];
 		this.value = await this.dashboardService.get_document_detail(id);
 
 		this.control_no = this.value.data[0].control_no
@@ -161,7 +163,19 @@ export class Login implements AfterViewInit {
 		this.result_routes = await this.dashboardService.get_routes_list(this.control_no)
 
 		this.attachment = this.result_attachments.data
-		this.route = this.result_routes.data
+		//this.route = this.result_routes.data
+
+		this.result_routes.data.forEach((x: any) => {
+			this.route.push({
+				date: x.date,
+				time: this.formatTime(x.date, x.server_time.substring(11,19)),//this.formatTime(x.date, x.time),
+				status: x.status,
+				office: x.office,
+				personnel: x.personnel,
+				remarks: x.remarks
+			})
+		})
+
 		this.cdr.detectChanges();
 	}
 	
@@ -209,5 +223,21 @@ export class Login implements AfterViewInit {
 			this.router.navigate(['/dashboard']);
 			swal.close();
 		}
+  	}
+
+	//OTHERS
+	formatTime(date:string, time: string): string{
+    
+		const datetime = new Date(`${date}T${time}`);
+
+		let result =  datetime.toLocaleTimeString('en-US', {
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true
+		});
+
+		if(result == 'Invalid Date')
+		{return ''} 
+		else { return result}
   	}
 }
