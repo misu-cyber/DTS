@@ -76,7 +76,7 @@ export class Dashboard implements OnInit{
 	route: any[] = [];
 	status: any
 	batch_no: any;
-	action = "1";
+	action = "2";
 	title_view: any;
 	remarks_view: any;
 
@@ -502,41 +502,48 @@ export class Dashboard implements OnInit{
 			// 	(attachment: { selected: any; }) => attachment.selected
 			// );
 			
-			this.result_document = await this.dashboardService.create_document({
-				control_no: this.control_no,
-				document_title: this.title,
-				document_code: this.code,
-				document_type: this.docType,
-				category: this.category,
-				office: this.employee.c_office,
-				remarks: this.remarks,
-				confidential: this.confidential,
-				date: this.formattedDate,
-				created_by: Number(localStorage.getItem('empID')),
-				sequence_no: 1,
-				action: Number(this.action)
-			});
+			if(this.title == undefined || this.docType == undefined || this.category == undefined){
+				swal.fire({
+					icon: "error",
+					title: "Error",
+					text: "Please fill out all required fields",
+				});
+			} else {
+				this.result_document = await this.dashboardService.create_document({
+					control_no: this.control_no,
+					document_title: this.title,
+					document_code: this.code,
+					document_type: this.docType,
+					category: this.category,
+					office: this.employee.c_office,
+					remarks: this.remarks,
+					confidential: this.confidential,
+					date: this.formattedDate,
+					created_by: Number(localStorage.getItem('empID')),
+					sequence_no: 1,
+					action: Number(this.action)
+				});
 
-			this.result_routes = await this.dashboardService.create_route({
-				control_no: this.control_no,
-				receiving_office: this.employee.c_office,
-				status: 1,
-				sequence_no: 1,
-				date: this.formattedDate,
-				time: this.formattedTime,
-				remarks: this.remarks,
-				created_by: Number(localStorage.getItem('empID'))
-			});
+				this.result_routes = await this.dashboardService.create_route({
+					control_no: this.control_no,
+					receiving_office: this.employee.c_office,
+					status: 1,
+					sequence_no: 1,
+					date: this.formattedDate,
+					time: this.formattedTime,
+					remarks: this.remarks,
+					created_by: Number(localStorage.getItem('empID'))
+				});
 
-			if(this.selectedAttachments.length > 0) {
-				for(let x = 0; x<this.selectedAttachments.length; x++){
-					this.result_attachments = await this.dashboardService.create_attachment({
-						control_no: this.control_no,
-						attachment: this.selectedAttachments[x]
-					})
+				if(this.selectedAttachments.length > 0) {
+					for(let x = 0; x<this.selectedAttachments.length; x++){
+						this.result_attachments = await this.dashboardService.create_attachment({
+							control_no: this.control_no,
+							attachment: this.selectedAttachments[x]
+						})
+					}
 				}
 			}
-
 
 		} else {
 			const num = parseInt(this.result.data[0].control_no.replace(this.date + '-', '')) + 1;
@@ -546,41 +553,49 @@ export class Dashboard implements OnInit{
 			// 	(attachment: { selected: any; }) => attachment.selected
 			// );
 
-			this.result_document = await this.dashboardService.create_document({
-				control_no: this.control_no,
-				document_title: this.title,
-				document_code: this.code,
-				document_type: this.docType,
-				category: this.category,
-				office: this.employee.c_office,
-				remarks: this.remarks,
-				confidential: this.confidential,
-				date: this.formattedDate,
-				created_by: Number(localStorage.getItem('empID')),
-				sequence_no: 1,
-				action: Number(this.action)
-			});
+			if(this.title == undefined || this.docType == undefined || this.category == undefined){
+				swal.fire({
+					icon: "error",
+					title: "Error",
+					text: "Please fill out all required fields",
+				});
+			} else {
+				this.result_document = await this.dashboardService.create_document({
+					control_no: this.control_no,
+					document_title: this.title,
+					document_code: this.code,
+					document_type: this.docType,
+					category: this.category,
+					office: this.employee.c_office,
+					remarks: this.remarks,
+					confidential: this.confidential,
+					date: this.formattedDate,
+					created_by: Number(localStorage.getItem('empID')),
+					sequence_no: 1,
+					action: Number(this.action)
+				});
 
-			this.result_routes = await this.dashboardService.create_route({
-				control_no: this.control_no,
-				receiving_office: this.employee.c_office,
-				status: 1,
-				sequence_no: 1,
-				date: this.formattedDate,
-				time: this.formattedTime,
-				remarks: this.remarks,
-				created_by: Number(localStorage.getItem('empID'))
-			});
+				this.result_routes = await this.dashboardService.create_route({
+					control_no: this.control_no,
+					receiving_office: this.employee.c_office,
+					status: 1,
+					sequence_no: 1,
+					date: this.formattedDate,
+					time: this.formattedTime,
+					remarks: this.remarks,
+					created_by: Number(localStorage.getItem('empID'))
+				});
 
-			if(this.selectedAttachments.length > 0) {
-				for(let x = 0; x<this.selectedAttachments.length; x++){
-					this.result_attachments = await this.dashboardService.create_attachment({
-						control_no: this.control_no,
-						attachment: this.selectedAttachments[x]
-					})
+				if(this.selectedAttachments.length > 0) {
+					for(let x = 0; x<this.selectedAttachments.length; x++){
+						this.result_attachments = await this.dashboardService.create_attachment({
+							control_no: this.control_no,
+							attachment: this.selectedAttachments[x]
+						})
+					}
 				}
-			}
 
+			}
 		}
 
 		if(this.result_document.error || this.result_routes.error){

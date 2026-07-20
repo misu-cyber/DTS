@@ -140,3 +140,7 @@ body { font-family: "Poppins", sans-serif;}
 .select2-container--open .select2-dropdown {
     margin-left: 8px;
 }
+
+.select2-container--default .select2-selection__rendered {
+    font-size: 12px !important;
+}

@@ -108,7 +108,7 @@
 								<div class="card-body">
 									{{docs.control_no}} <br/>
 									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
-									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
+									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
 										<div class="col-md-12">
 											@switch(docs.status) {
@@ -162,7 +162,7 @@
 								<div class="card-body">
 									{{docs.control_no}} <br/>
 									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
-									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
+									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
 										<div class="col-md-12">
 											<span class="badge bg-primary">Ongoing</span>
@@ -210,7 +210,7 @@
 								<div class="card-body">
 									{{docs.control_no}} <br/>
 									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
-									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
+									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
 										<div class="col-md-12">
 											<span class="badge bg-success">Completed</span>
@@ -258,7 +258,7 @@
 								<div class="card-body">
 									{{docs.control_no}} <br/>
 									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
-									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
+									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
 										<div class="col-md-12">
 											<span class="badge bg-danger">Cancelled</span>
@@ -461,12 +461,12 @@
 
 				<table class="table table-responsive table-bordered">
 					<tr>
-						<th>DATE</th>
-						<th>TIME</th>
-						<th>STATUS</th>
-						<th>OFFICE</th>
+						<th style="width: 10%">DATE</th>
+						<th style="width: 10%">TIME</th>
+						<th style="width: 10%">STATUS</th>
+						<th style="width: 10%">OFFICE</th>
 						<th>PERSONNEL</th>
-						<th>REMARKS</th>
+						<th style="width: 35%">REMARKS</th>
 					</tr>
 					@for(route of route; track route.id){
 						<tr>
@@ -529,7 +529,7 @@
 										<tr>
 											<td>
 												<div class="form-check">
-  													<input class="form-check-input" type="checkbox" name="forRelease" [(ngModel)]="release.selected" value="{{control_no}}" style="margin-left: 5%;">
+  													<input class="form-check-input shadow-sm bg-light" type="checkbox" name="forRelease" [(ngModel)]="release.selected" value="{{control_no}}" style="margin-left: 5%;">
 												</div>
 											</td>
 											<td>
@@ -541,7 +541,7 @@
 											<td></td>
 											<td>
 												<div class="col-sm-12">
-													<textarea class="form-control" name="release_remarks" [(ngModel)]="release.release_remarks" style="width: 100%;"></textarea>
+													<textarea class="form-control" name="release_remarks" [(ngModel)]="release.release_remarks" style="width: 100%;" placeholder="Input Remarks"></textarea>
 												</div>
 											</td>
 										</tr>
@@ -634,7 +634,7 @@
 </div>
 
 <div class="modal" id="search">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-xl">
     	<div class="modal-content">
 
       		<div class="modal-header">
@@ -655,8 +655,8 @@
 							<div class="card">
 								<div class="card-body">
 									{{docs.control_no}} <br/>
-									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
-									<p [title]="docs.originating_office">{{docs.originating_office | slice:0:20 }}{{ docs.originating_office.length > 20 ? '...' : '' }}</p>
+									<b [title]="docs.document_title">{{docs.document_title | slice:0:30 }}{{ docs.document_title.length > 30 ? '...' : '' }}</b> <br/>
+									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
 										<div class="col-md-12">
 											@switch(docs.status) {
