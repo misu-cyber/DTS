@@ -205,6 +205,11 @@ export class DashboardService {
 			date: payload.date
 		});
 	}
+
+	async reroute_document(control_no: string, sequence_no: number){
+		return await this.supabase.schema('dts').from('route').update({isActive: false})
+					 .eq('control_no', control_no).eq('sequence_no', sequence_no);
+	}
 }
 
 

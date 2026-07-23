@@ -168,11 +168,20 @@ export class Admin implements OnInit{
 					data: null,
 					title: 'Action',
 					render: function (data, type, row) {
-					return `
-						<div class="btn btn-group">
-							<button class="primary-btn btn-view" data-id="${row.id}" data-status="${row.status}" data-bs-toggle="modal" data-bs-target="#view"><i class="fa fa-file"></i></button>
-						</div>
-					`;
+						if(row.status == 4 || row.status == 5){
+							return `
+								<div class="btn btn-group">
+									<button class="primary-btn btn-view" data-id="${row.id}" data-status="${row.status}" data-bs-toggle="modal" data-bs-target="#view"><i class="fa fa-file"></i></button>
+									<button class="primary-btn btn-revoke" data-id="${row.control_no}"><i class="fa-solid fa-rotate-left"></i></button>
+								</div>
+							`;
+						} else {
+							return `
+								<div class="btn btn-group">
+									<button class="primary-btn btn-view" data-id="${row.id}" data-status="${row.status}" data-bs-toggle="modal" data-bs-target="#view"><i class="fa fa-file"></i></button>
+								</div>
+							`;
+						}
 					}
 				}
 			],
@@ -190,16 +199,16 @@ export class Admin implements OnInit{
 			const id = $(event.currentTarget).data('id');
 			const status = $(event.currentTarget).data('status');
 
-			this.viewDocument(id, status)
+			this.viewDocument(id, status);
 			
   		});
 
-		// $('#tblDocuments tbody').on('click', '.btn-transfer', (event: any) => {
-		// 	const id = $(event.currentTarget).data('id');
+		$('#tblDocuments tbody').on('click', '.btn-revoke', (event: any) => {
+			const id = $(event.currentTarget).data('id');
 
-		// 	this.transferDocument()
-			
-  		// });
+			this.revokeDocument(id);
+
+  		});
 	}
 
 	//FETCH DATA
@@ -391,6 +400,43 @@ export class Admin implements OnInit{
 			}
 		});
 		
+	}
+
+	async revokeDocument(control_no: string){
+		swal.fire({
+			title: "Are you sure you want to re-route the document?",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#3FA34D",
+			cancelButtonColor: "gray",
+			confirmButtonText: "Yes, re-route!"
+		}).then(async (result) => {
+			if (result.isConfirmed) {
+				this.value = await this.dashboardService.get_sequence_no(control_no)
+
+				this.result_routes = await this.dashboardService.reroute_document(control_no, this.value.data[0].sequence_no)
+		
+				if(this.result_routes.error){
+				swal.fire({
+					icon: "error",
+					title: "Error",
+					text: "Please try again",
+				});
+				} else {
+					swal.fire({
+						icon: "success",
+						title: "Completed",
+						text: "Document has been re-routed.",
+					}).then((result) => {
+						if (result.isConfirmed) {
+							location.reload();
+						}
+					});
+				}
+			} else {
+				swal.close();
+			}
+		});
 	}
 
 	//PRINT / PDF
