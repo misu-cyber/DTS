@@ -96,6 +96,7 @@ export class Dashboard implements OnInit{
 	completeddocs: any;
 	cancelleddocs: any;
 	releasedocs: any;
+	searchreleasedocs: any;
 	receiveddocs: any;
 	releasedbatch: any;
 	searchdocs: any;
@@ -127,6 +128,10 @@ export class Dashboard implements OnInit{
 	day: any;
 
 	now: Date = new Date();
+
+	searchText = '';
+
+	isLoading = false;
 
   	// formattedDate: string = new Intl.DateTimeFormat('en-US', {
 	// 	timeZone: 'Asia/Manila',
@@ -377,6 +382,7 @@ export class Dashboard implements OnInit{
 	async fetchDocRelease(){
 		this.result = await this.dashboardService.get_release_document(localStorage.getItem('empID')?.toString());
 		this.releasedocs = this.result.data.map((result: any) => ({...result, selected: false, release_remarks: null}))
+		this.searchreleasedocs = [...this.releasedocs];
 		this.cdr.detectChanges();
 	}
 
@@ -492,6 +498,7 @@ export class Dashboard implements OnInit{
 
 	//TRANSACTIONS
 	async createDocument(){
+		this.isLoading = true;
 		this.day = this.formattedDate + '%';
 		this.result = await this.dashboardService.get_control_no(this.day)
 
@@ -503,6 +510,7 @@ export class Dashboard implements OnInit{
 			// );
 			
 			if(this.title == undefined || this.docType == undefined || this.category == undefined){
+				this.isLoading = false;
 				swal.fire({
 					icon: "error",
 					title: "Error",
@@ -554,6 +562,7 @@ export class Dashboard implements OnInit{
 			// );
 
 			if(this.title == undefined || this.docType == undefined || this.category == undefined){
+				this.isLoading = false;
 				swal.fire({
 					icon: "error",
 					title: "Error",
@@ -598,12 +607,14 @@ export class Dashboard implements OnInit{
 			}
 		}
 
+		this.isLoading = false
+		this.cdr.detectChanges();
 		if(this.result_document.error || this.result_routes.error){
-		swal.fire({
-			icon: "error",
-			title: "Error",
-			text: "Please try again",
-		});
+			swal.fire({
+				icon: "error",
+				title: "Error",
+				text: "Please try again",
+			});
 		} else {
 			swal.fire({
 				icon: "success",
@@ -618,7 +629,7 @@ export class Dashboard implements OnInit{
 	}
 
 	async viewDocument(id: number, status: number){
-
+		this.isLoading = true;
 		// switch(status){
 		// 	case 1: 
 		// 		this.value = Object.values(this.createddocs).find((x : any) => x.id == id)
@@ -670,11 +681,12 @@ export class Dashboard implements OnInit{
 				remarks: x.remarks
 			})
 		})
-
+		this.isLoading = false;
 		this.cdr.detectChanges();
 	}
 
 	async releaseDocument(){
+		this.isLoading = true;
 		this.result = await this.dashboardService.get_batch_no()
 		this.releasedocs.forEach(async (docs: any) => {
 			if(docs.selected == true){
@@ -724,6 +736,8 @@ export class Dashboard implements OnInit{
 		// 	text: "Please try again",
 		// });
 		// } else {
+			this.isLoading = false
+			this.cdr.detectChanges();
 			swal.fire({
 				icon: "success",
 				title: "Release",
@@ -734,6 +748,16 @@ export class Dashboard implements OnInit{
 				}
 			});
 		// }
+	}
+
+	async searchReleaseDocument(){
+		const search = this.searchText.toLowerCase().trim();
+		this.searchreleasedocs = this.releasedocs.filter((control_no: { [s: string]: unknown; } | ArrayLike<unknown>) =>
+			Object.values(control_no).some(value =>
+			String(value ?? '').toLowerCase().includes(search)
+			)
+		);
+		this.cdr.detectChanges();
 	}
 
 	async receiveDocument(){

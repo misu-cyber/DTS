@@ -19,12 +19,12 @@ export class AdminService {
 
 	async getDocuments(from: number, to: number){
 		return await this.supabase.schema('dts').from('document_details').select('*', { count: 'exact' })
-					 .eq('isConfidential', false).order('control_no', {'ascending': false}).range(from, to);
+					 .order('control_no', {'ascending': false}).range(from, to);
 	}
 
 	async getDocumentsSearch(from: number, to: number, search: string){
 		return await this.supabase.schema('dts').from('document_details').select('*', { count: 'exact' })
-					 .eq('isConfidential', false).or(`control_no.ilike.%${search}%, document_title.ilike.%${search}%`)
+					 .or(`control_no.ilike.%${search}%, document_title.ilike.%${search}%`)
 					 .order('control_no', {'ascending': false}).range(from, to);
 	}
 }

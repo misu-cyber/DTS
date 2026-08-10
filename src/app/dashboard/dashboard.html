@@ -521,34 +521,36 @@
       		<div class="modal-body">
         		<div class="row">
 
-					@for(release of releasedocs; track release.id){
-						<div class="col-md-12 mb-3">
-							<div class="card">
-								<div class="card-body">
-									<table class="table">
-										<tr>
-											<td>
-												<div class="form-check">
-  													<input class="form-check-input shadow-sm" type="checkbox" name="forRelease" [(ngModel)]="release.selected" value="{{control_no}}" style="margin-left: 5%;">
-												</div>
-											</td>
-											<td>
-												{{release.control_no}} - 
-												<b>{{release.document_title}}</b>
-											</td>
-										</tr>
-										<tr>
-											<td></td>
-											<td>
-												<div class="col-sm-12">
-													<textarea class="form-control" name="release_remarks" [(ngModel)]="release.release_remarks" style="width: 100%;" placeholder="Input Remarks"></textarea>
-												</div>
-											</td>
-										</tr>
-									</table>
-									
-								</div>
-							</div>
+					<div class="input-group mb-3">
+						<span class="input-group-text">
+							<i class="fa fa-search"></i>
+						</span>
+
+						<input
+							type="text"
+							class="form-control"
+							placeholder="Search..."
+							[(ngModel)]="searchText"
+							(input)="searchReleaseDocument()"
+						/>
+					</div>
+
+					@for(release of searchreleasedocs; track release.id){
+						<div class="col-md-12">
+							<table class="table table-responsive">
+								<tr>
+									<td>
+										<div class="form-check">
+											<input class="form-check-input shadow-sm" type="checkbox" name="forRelease" [(ngModel)]="release.selected" value="{{control_no}}" style="margin-left: 5%;">
+										</div>
+									</td>
+									<td>
+										{{release.control_no}} - 
+										<b>{{release.document_title}}</b> <br/>
+										<textarea class="form-control" name="release_remarks" [(ngModel)]="release.release_remarks" style="width: 100%;" placeholder="Input Remarks"></textarea>
+									</td>
+								</tr>
+							</table>
 						</div>
 					}
 	
@@ -753,3 +755,17 @@
     	</div>
   	</div>
 </div>
+
+@if(this.isLoading == true){
+  <div class="loading-overlay">
+    <div class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+
+      <div class="mt-2">
+        Loading...
+      </div>
+    </div>
+  </div>
+}

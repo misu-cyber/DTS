@@ -49,6 +49,8 @@ export class Login implements AfterViewInit {
 
 	search : any;
 
+	isLoading = false;
+
 	constructor(
   		private cdr: ChangeDetectorRef
 	) {}
@@ -182,20 +184,21 @@ export class Login implements AfterViewInit {
 
 	async signInWithEmail() {
 
-		swal.fire({
-			title: 'Loading...',
-			didOpen: () => {
-				swal.showLoading();
-			}
-		});
+		this.isLoading = true;
+		// swal.fire({
+		// 	title: 'Loading...',
+		// 	didOpen: () => {
+		// 		swal.showLoading();
+		// 	}
+		// });
 
 		this.result = await this.userService.signInWithEmail({
-		email: this.email(),
-		password: this.password(),
+			email: this.email(),
+			password: this.password(),
 		})
 
 		if (this.result.data.session == null) {
-			swal.close();
+			this.isLoading = false;
 			swal.fire({
 				icon: "error",
 				title: "Sign In failed",
@@ -209,7 +212,6 @@ export class Login implements AfterViewInit {
 			localStorage.setItem('signatory', this.result.data[0].c_signatory);
 			this.result = await this.userService.getUserRole(this.result.data[0].c_empID);
 			
-			console.log(this.result.data)
 			if(this.result.data.length == 1){
 				if(this.result.data[0].isActive == true) {
 					localStorage.setItem('role', '1');
@@ -221,7 +223,6 @@ export class Login implements AfterViewInit {
 			}
 
 			this.router.navigate(['/dashboard']);
-			swal.close();
 		}
   	}
 

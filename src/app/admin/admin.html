@@ -149,7 +149,7 @@
 </div>
 
 <div class="modal" id="transfer">
-	<div class="modal-dialog modal-md">
+	<div class="modal-dialog modal-md modal-dialog-scrollable">
     	<div class="modal-content">
 
 			<div class="modal-header">
@@ -159,7 +159,7 @@
 
 			<div class="modal-body">
 				<label>Transfer to: <span class="text-danger">*</span></label>
-				<select class="form-select mb-3" [(ngModel)]="transfer" name="transfer">
+				<select #transferDropdown class="form-select mb-3" [(ngModel)]="transfer" name="transfer" id="transferSelect">
 					@for (employee of employees; track employee.id) {
 						<option value="{{employee.c_empID}}">{{ employee.c_surname}}, {{ employee.c_firstname}}</option>
 					}

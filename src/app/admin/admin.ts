@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, AfterViewInit, WritableSignal, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, signal, OnInit, AfterViewInit, WritableSignal, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -14,6 +14,10 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 import JsBarcode from 'jsbarcode';
+
+import 'select2';
+
+declare var $: any;
 
 @Component({
   selector: 'app-admin',
@@ -71,7 +75,9 @@ export class Admin implements OnInit{
 
 	formattedDate = this.now.getFullYear() + '-' + String(this.now.getMonth() + 1).padStart(2, '0') + '-' + String(this.now.getDate()).padStart(2, '0');
 
-
+	@ViewChild('transferDropdown')
+  	transferDropdown!: ElementRef<HTMLSelectElement>;
+	
   	// DECLARATION 
   	// | ----------------------------------------------------------- |
   
@@ -110,7 +116,7 @@ export class Admin implements OnInit{
 				if(search){
 					this.data = [];
 					const{data, count, error} = await this.adminService.getDocumentsSearch(from, to, search);
-					
+
 					data?.forEach(x => {
 						this.data.push({
 							id: x.id,
@@ -209,6 +215,21 @@ export class Admin implements OnInit{
 			this.revokeDocument(id);
 
   		});
+
+		const $select = $(this.transferDropdown.nativeElement);
+
+		$('#transfer').on('shown.bs.modal', () => {
+			const $select = $('#transferSelect');
+
+			if ($select.hasClass('select2-hidden-accessible')) {
+				$select.select2('destroy');
+			}
+
+			$select.select2({
+				dropdownParent: $('#transfer'),
+				width: '100%'
+			});
+		});
 	}
 
 	//FETCH DATA
