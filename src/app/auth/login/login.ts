@@ -199,6 +199,7 @@ export class Login implements AfterViewInit {
 
 		if (this.result.data.session == null) {
 			this.isLoading = false;
+			this.cdr.detectChanges();
 			swal.fire({
 				icon: "error",
 				title: "Sign In failed",
