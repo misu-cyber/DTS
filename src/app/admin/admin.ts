@@ -293,6 +293,8 @@ export class Admin implements OnInit{
 	}
 
 	async transferDocument(){
+		this.transfer = $('#transferSelect').val();
+		
 		this.value = await this.dashboardService.get_sequence_no(this.control_no)
 		this.transfer_office = Object.values(this.employees).find((x : any) => x.c_empID == this.transfer)
 
