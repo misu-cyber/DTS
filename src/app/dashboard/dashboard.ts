@@ -1339,6 +1339,10 @@ export class Dashboard implements OnInit{
 		location.reload();
 	}
 
+	clearRelease(){
+		this.searchText = '';
+	}
+
 	async signOut() {
 		swal.fire({
       		title: "Are you sure you want to logout?",

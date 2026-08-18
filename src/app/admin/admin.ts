@@ -288,7 +288,6 @@ export class Admin implements OnInit{
 	async viewTransfer(){
 		this.result = await this.userService.getEmployees();
 		this.employees = this.result.data;
-
 		this.cdr.detectChanges();
 	}
 
@@ -659,4 +658,8 @@ export class Admin implements OnInit{
 		{return ''} 
 		else { return result}
   	}
+
+	clearTransfer(){
+		$('#transferSelect').val('');
+	}
 }
