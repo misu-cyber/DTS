@@ -24,7 +24,7 @@ export class AdminService {
 
 	async getDocumentsSearch(from: number, to: number, search: string){
 		return await this.supabase.schema('dts').from('document_details').select('*', { count: 'exact' })
-					 .or(`control_no.ilike.%${search}%, document_title.ilike.%${search}%`)
+					 .or(`control_no.ilike.%${search}%, document_title.ilike.%${search}%, fullname_creator.ilike.%${search}%, current_location.ilike.%${search}%`)
 					 .order('control_no', {'ascending': false}).range(from, to);
 	}
 }

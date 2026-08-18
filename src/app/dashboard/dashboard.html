@@ -110,21 +110,19 @@
 									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
 									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
-										<div class="col-md-12">
+										<div class="col-md-6">
 											@switch(docs.status) {
 												@case (1) {<span class="badge bg-secondary">Created</span>}
 												@case (2) {<span class="badge bg-primary">Released</span>}
 												@case (3) {<span class="badge bg-primary">Ongoing</span>}
 												@case (6) {<span class="badge bg-primary">Transferred</span>}
 											}
-										</div>
-										<div class="col-md-12">
 											@switch (docs.isConfidential) {
 												@case (true) {<span class="badge bg-danger">Confidential</span>}
 												@case (false) {<span class="badge bg-secondary">Public</span>}
 											}
 										</div>
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<div class="float-end">
 												<button class="primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
 											</div>
@@ -164,16 +162,14 @@
 									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
 									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<span class="badge bg-primary">Ongoing</span>
-										</div>
-										<div class="col-md-12">
 											@switch (docs.isConfidential) {
 												@case (true) {<span class="badge bg-danger">Confidential</span>}
 												@case (false) {<span class="badge bg-secondary">Public</span>}
 											}
 										</div>
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<div class="float-end">
 												<button class="primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
 											</div>
@@ -212,16 +208,14 @@
 									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
 									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<span class="badge bg-success">Completed</span>
-										</div>
-										<div class="col-md-12">
 											@switch (docs.isConfidential) {
 												@case (true) {<span class="badge bg-danger">Confidential</span>}
 												@case (false) {<span class="badge bg-secondary">Public</span>}
 											}
 										</div>
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<div class="float-end">
 												<button class="primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
 											</div>
@@ -260,16 +254,14 @@
 									<b [title]="docs.document_title">{{docs.document_title | slice:0:20 }}{{ docs.document_title.length > 20 ? '...' : '' }}</b> <br/>
 									<p [title]="docs.originating_office">{{docs.originating_office_abbrev}}</p>
 									<div class="row">
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<span class="badge bg-danger">Cancelled</span>
-										</div>
-										<div class="col-md-12">
 											@switch (docs.isConfidential) {
 												@case (true) {<span class="badge bg-danger">Confidential</span>}
 												@case (false) {<span class="badge bg-secondary">Public</span>}
 											}
 										</div>
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<div class="float-end">
 												<button class="primary" (click)="viewDocument(docs.id, docs.status)" data-bs-toggle="modal" data-bs-target="#view">View</button>
 											</div>
@@ -354,6 +346,13 @@
 						}
 					</select>
 
+					<label>Office <span class="text-danger">*</span></label>
+					<select class="form-select mb-3" [(ngModel)]="office" name="office" id="officeDropdown">
+						@for (office of offices; track office.id) {
+							<option value="{{office.id}}">{{ office.c_office}}</option>
+						}
+					</select>
+
 					<div class="mb-3">
 						<label>Action Needed <span class="text-danger">*</span></label><br/>
 						<div class="form-check">
@@ -414,6 +413,7 @@
 
       		<div class="modal-body">
 				<div class="float-end">
+					<button class="primary" type="button" data-bs-toggle="modal" data-bs-target="#release_document"><i class="fa-solid fa-file"></i> Release</button>
 					<button class="primary" (click)="printRouting(this.control_no)"><i class="fa-solid fa-print"></i> Print</button>
 				</div>
 				
@@ -545,8 +545,7 @@
 										</div>
 									</td>
 									<td>
-										{{release.control_no}} - 
-										<b>{{release.document_title}}</b> <br/>
+										<p style="margin-bottom: 0; padding-bottom: 0;">{{release.control_no}} - <b>{{release.document_title}}</b></p>
 										<textarea class="form-control" name="release_remarks" [(ngModel)]="release.release_remarks" style="width: 100%;" placeholder="Input Remarks"></textarea>
 									</td>
 								</tr>
@@ -554,6 +553,30 @@
 						</div>
 					}
 	
+				</div>
+      		</div>
+
+			<div class="modal-footer">
+				<div class="d-grid gap-3"><button class="btn primary" (click)="releaseDocuments()"> RELEASE</button></div>
+			</div>
+
+    	</div>
+  	</div>
+</div>
+
+<div class="modal" id="release_document">
+	<div class="modal-dialog">
+    	<div class="modal-content">
+
+      		<div class="modal-header">
+        		<h4 class="modal-title">Release: {{this.control_no}}</h4>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      		</div>
+
+      		<div class="modal-body">
+        		<div class="container">
+					<label>Remarks:</label>
+					<textarea class="form-control" [(ngModel)]="releaseRemarks" name="release_remarks" id="release_remarks"></textarea>
 				</div>
       		</div>
 

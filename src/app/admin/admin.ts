@@ -632,7 +632,15 @@ export class Admin implements OnInit{
 		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 151);
 		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 156);
 
-		doc.save(`ROUTING SLIP_${control_no}.pdf`);
+		//doc.save(`ROUTING SLIP_${control_no}.pdf`);
+
+		doc.setProperties({
+			title: `ROUTING SLIP_${control_no}`,
+			subject: `ROUTING SLIP_${control_no}`
+    	});
+
+		const url = doc.output('bloburl');
+		window.open(url, '_blank');
 	}
 
 

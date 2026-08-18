@@ -34,6 +34,11 @@ export class DashboardService {
     	.eq('isActive', true).order('type_name', { ascending: true });
   	}
 
+	async get_offices(){
+		return await this.supabase.schema('public').from('offices').select()
+		.eq('isActive', true).order('c_office', {ascending: true});
+	}
+
 	// DOCUMENT 
   	// | ----------------------------------------------------------- |
 

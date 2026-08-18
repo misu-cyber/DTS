@@ -64,6 +64,7 @@ export class Dashboard implements OnInit{
 	employee: any;
 	employee_details: any;
 	user_role: any;
+	offices: any;
 
 	control_no: any
 	title: any;
@@ -79,6 +80,7 @@ export class Dashboard implements OnInit{
 	action = "2";
 	title_view: any;
 	remarks_view: any;
+	office: any;
 
 	document: any;
 
@@ -131,6 +133,8 @@ export class Dashboard implements OnInit{
 
 	searchText = '';
 
+	releaseRemarks: any;
+
 	isLoading = false;
 
   	// formattedDate: string = new Intl.DateTimeFormat('en-US', {
@@ -168,6 +172,7 @@ export class Dashboard implements OnInit{
   	// | ----------------------------------------------------------- |
 	ngOnInit() {
 		this.fetchUser();
+		this.fetchOffices();
 		this.fetchAttachment();
 		this.fetchCategory();
 		this.fetchDocType();
@@ -227,7 +232,14 @@ export class Dashboard implements OnInit{
 			this.cdr.detectChanges();
 		}
 
-		console.log(this.employee);
+		this.office = this.employee.c_office;
+		//console.log(this.employee);
+	}
+
+	async fetchOffices(){
+		this.result = await this.dashboardService.get_offices();
+		this.offices = this.result.data;
+		this.cdr.detectChanges();
 	}
 
 	async fetchAttachment(){
@@ -509,7 +521,7 @@ export class Dashboard implements OnInit{
 			// 	(attachment: { selected: any; }) => attachment.selected
 			// );
 			
-			if(this.title == undefined || this.docType == undefined || this.category == undefined){
+			if(this.title == undefined || this.docType == undefined || this.category == undefined || this.office == undefined){
 				this.isLoading = false;
 				swal.fire({
 					icon: "error",
@@ -523,7 +535,7 @@ export class Dashboard implements OnInit{
 					document_code: this.code,
 					document_type: this.docType,
 					category: this.category,
-					office: this.employee.c_office,
+					office: this.office,//this.employee.c_office,
 					remarks: this.remarks,
 					confidential: this.confidential,
 					date: this.formattedDate,
@@ -534,7 +546,7 @@ export class Dashboard implements OnInit{
 
 				this.result_routes = await this.dashboardService.create_route({
 					control_no: this.control_no,
-					receiving_office: this.employee.c_office,
+					receiving_office: this.office,//this.employee.c_office,
 					status: 1,
 					sequence_no: 1,
 					date: this.formattedDate,
@@ -575,7 +587,7 @@ export class Dashboard implements OnInit{
 					document_code: this.code,
 					document_type: this.docType,
 					category: this.category,
-					office: this.employee.c_office,
+					office: this.office,//this.employee.c_office,
 					remarks: this.remarks,
 					confidential: this.confidential,
 					date: this.formattedDate,
@@ -586,7 +598,7 @@ export class Dashboard implements OnInit{
 
 				this.result_routes = await this.dashboardService.create_route({
 					control_no: this.control_no,
-					receiving_office: this.employee.c_office,
+					receiving_office: this.office,//this.employee.c_office,
 					status: 1,
 					sequence_no: 1,
 					date: this.formattedDate,
@@ -664,6 +676,7 @@ export class Dashboard implements OnInit{
 		this.confidential = this.value.data[0].isConfidential
 		this.status = this.value.data[0].status
 		this.action = this.value.data[0].action
+		this.office = this.value.data[0].office
 
 		this.result_attachments = await this.dashboardService.get_attachment_list(this.control_no)
 		this.result_routes = await this.dashboardService.get_routes_list(this.control_no)
@@ -685,7 +698,7 @@ export class Dashboard implements OnInit{
 		this.cdr.detectChanges();
 	}
 
-	async releaseDocument(){
+	async releaseDocuments(){
 		this.isLoading = true;
 		this.result = await this.dashboardService.get_batch_no()
 		this.releasedocs.forEach(async (docs: any) => {
@@ -748,6 +761,57 @@ export class Dashboard implements OnInit{
 				}
 			});
 		// }
+	}
+
+	async releaseDocument(){
+		this.isLoading = true;
+		this.result = await this.dashboardService.get_batch_no()
+		this.value = await this.dashboardService.get_sequence_no(this.control_no)
+
+		this.result_routes = await this.dashboardService.create_route({
+			control_no: this.control_no,
+			receiving_office: this.employee.c_office,
+			status: 2,
+			sequence_no: this.value.data[0].sequence_no + 1,
+			date: this.formattedDate,
+			time: this.formattedTime,
+			remarks: this.releaseRemarks,
+			created_by: Number(localStorage.getItem('empID'))
+		});
+
+		if(this.result.data == ''){
+			this.batch_no = this.now.getFullYear() + '-000001'
+
+			this.result_batch = await this.dashboardService.create_batch({
+				batch_no: this.batch_no,
+				control_no: this.control_no,
+				created_by: Number(localStorage.getItem('empID')),
+				date: this.formattedDate
+			});
+
+		} else {
+			const num = parseInt(this.result.data[0].batch_no.replace(this.now.getFullYear() + '-', '')) + 1;
+			this.batch_no = this.now.getFullYear() + '-' +num.toString().padStart(6, '0');
+
+			this.result_batch = await this.dashboardService.create_batch({
+				batch_no: this.batch_no,
+				control_no: this.control_no,
+				created_by: Number(localStorage.getItem('empID')),
+				date: this.formattedDate
+			});
+		}
+
+		this.isLoading = false
+		this.cdr.detectChanges();
+		swal.fire({
+			icon: "success",
+			title: "Release",
+			text: "Document/s have been released.",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				location.reload();
+			}
+		});
 	}
 
 	async searchReleaseDocument(){
@@ -1104,7 +1168,15 @@ export class Dashboard implements OnInit{
 		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 151);
 		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 156);
 
-		doc.save(`ROUTING SLIP_${control_no}.pdf`);
+		//doc.save(`ROUTING SLIP_${control_no}.pdf`);
+
+		doc.setProperties({
+			title: `ROUTING SLIP_${control_no}`,
+			subject: `ROUTING SLIP_${control_no}`
+    	});
+
+		const url = doc.output('bloburl');
+		window.open(url, '_blank');
 	}
 
 	async printReceivingSlip(batch_no: string){
@@ -1234,7 +1306,15 @@ export class Dashboard implements OnInit{
 		// doc.line(130, tableY + 15, 195, tableY + 15);
 		// doc.text('Name and Signature', 145, tableY + 20);
 
-		doc.save(`RECEIVING SLIP_${batch_no}.pdf`);
+		//doc.save(`RECEIVING SLIP_${batch_no}.pdf`);
+
+		doc.setProperties({
+			title: `RECEIVING SLIP_${batch_no}`,
+			subject: `RECEIVING SLIP_${batch_no}`
+    	});
+
+		const url = doc.output('bloburl');
+		window.open(url, '_blank');
 	}
 
 
@@ -1255,6 +1335,7 @@ export class Dashboard implements OnInit{
   	}
 
 	reloadPage(){
+		this.document = '';
 		location.reload();
 	}
 
