@@ -888,35 +888,44 @@ export class Dashboard implements OnInit{
 			confirmButtonText: "Yes, complete!"
 		}).then(async (result) => {
 			if (result.isConfirmed) {
-				this.value = await this.dashboardService.get_sequence_no(this.control_no)
 
-				this.result_routes = await this.dashboardService.create_route({
-					control_no: this.control_no,
-					receiving_office: this.employee_details.c_office,
-					status: 4,
-					sequence_no: this.value.data[0].sequence_no + 1,
-					date: this.formattedDate,
-					time: this.formattedTime,
-					remarks: this.document_complete,
-					created_by: Number(localStorage.getItem('empID'))
-				});
-		
-				if(this.result_routes.error){
-				swal.fire({
-					icon: "error",
-					title: "Error",
-					text: "Please try again",
-				});
-				} else {
+				if(this.document_complete == '' || this.document_complete == null){
 					swal.fire({
-						icon: "success",
-						title: "Completed",
-						text: "Document has been completed.",
-					}).then((result) => {
-						if (result.isConfirmed) {
-							location.reload();
-						}
+						icon: "error",
+						title: "Error",
+						text: "Please input remarks before completing",
 					});
+				} else {
+					this.value = await this.dashboardService.get_sequence_no(this.control_no)
+
+					this.result_routes = await this.dashboardService.create_route({
+						control_no: this.control_no,
+						receiving_office: this.employee_details.c_office,
+						status: 4,
+						sequence_no: this.value.data[0].sequence_no + 1,
+						date: this.formattedDate,
+						time: this.formattedTime,
+						remarks: this.document_complete,
+						created_by: Number(localStorage.getItem('empID'))
+					});
+			
+					if(this.result_routes.error){
+					swal.fire({
+						icon: "error",
+						title: "Error",
+						text: "Please try again",
+					});
+					} else {
+						swal.fire({
+							icon: "success",
+							title: "Completed",
+							text: "Document has been completed.",
+						}).then((result) => {
+							if (result.isConfirmed) {
+								location.reload();
+							}
+						});
+					}
 				}
 			} else {
 				swal.close();
@@ -936,35 +945,43 @@ export class Dashboard implements OnInit{
 			confirmButtonText: "Yes, revoke!"
 		}).then(async (result) => {
 			if (result.isConfirmed) {
-				this.value = await this.dashboardService.get_sequence_no(this.control_no)
-
-				this.result_routes = await this.dashboardService.create_route({
-					control_no: this.control_no,
-					receiving_office: this.employee_details.c_office,
-					status: 5,
-					sequence_no: this.value.data[0].sequence_no + 1,
-					date: this.formattedDate,
-					time: this.formattedTime,
-					remarks: this.document_revoke,
-					created_by: Number(localStorage.getItem('empID'))
-				});
-		
-				if(this.result_routes.error){
-				swal.fire({
-					icon: "error",
-					title: "Error",
-					text: "Please try again",
-				});
-				} else {
+				if(this.document_revoke == '' || this.document_revoke == null){
 					swal.fire({
-						icon: "success",
-						title: "Cancelled",
-						text: "Document has been cancelled.",
-					}).then((result) => {
-						if (result.isConfirmed) {
-							location.reload();
-						}
+						icon: "error",
+						title: "Error",
+						text: "Please input remarks before revoking",
 					});
+				} else {
+					this.value = await this.dashboardService.get_sequence_no(this.control_no)
+
+					this.result_routes = await this.dashboardService.create_route({
+						control_no: this.control_no,
+						receiving_office: this.employee_details.c_office,
+						status: 5,
+						sequence_no: this.value.data[0].sequence_no + 1,
+						date: this.formattedDate,
+						time: this.formattedTime,
+						remarks: this.document_revoke,
+						created_by: Number(localStorage.getItem('empID'))
+					});
+			
+					if(this.result_routes.error){
+					swal.fire({
+						icon: "error",
+						title: "Error",
+						text: "Please try again",
+					});
+					} else {
+						swal.fire({
+							icon: "success",
+							title: "Cancelled",
+							text: "Document has been cancelled.",
+						}).then((result) => {
+							if (result.isConfirmed) {
+								location.reload();
+							}
+						});
+					}
 				}
 			} else {
 				swal.close();
@@ -1069,7 +1086,7 @@ export class Dashboard implements OnInit{
 		const barcodeImage = canvas.toDataURL('image/png');
 
 		//CREATION OF PDF
-		const doc = new jsPDF('p', 'mm', 'a4');
+		const doc = new jsPDF('p', 'mm', 'a4', true);
 		const img = new Image();
 		img.src = 'assets/images/TEC_B.png';
 	
@@ -1227,7 +1244,7 @@ export class Dashboard implements OnInit{
 			batch.remarks
 		]);
 
-		const doc = new jsPDF('l', 'mm', 'a4');
+		const doc = new jsPDF('l', 'mm', 'a4', true);
 
 		doc.setFontSize(15);
         doc.setFont('BookAntiqua');

@@ -537,7 +537,7 @@ export class Admin implements OnInit{
 		const barcodeImage = canvas.toDataURL('image/png');
 
 		//CREATION OF PDF
-		const doc = new jsPDF('p', 'mm', 'a4');
+		const doc = new jsPDF('p', 'mm', 'a4', true);
 		const img = new Image();
 		img.src = 'assets/images/TEC_B.png';
 	

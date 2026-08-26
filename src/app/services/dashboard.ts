@@ -61,7 +61,7 @@ export class DashboardService {
 					 .order('control_no', {ascending: false})
 					 .eq('document_holder', empID)
 					 //.eq('status', 3)
-					 .or('status.eq.3,status.eq.6')
+					 .or('status.eq.2,status.eq.3,status.eq.6')
 					 //.or(`document_holder.eq.${empID},created_by.eq.${empID}`)
 					 .range(from, to);
 	}
