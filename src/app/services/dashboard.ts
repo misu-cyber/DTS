@@ -180,9 +180,9 @@ export class DashboardService {
 					 .order('batch', {ascending: false});
 	}
 
-	async get_batch(batch_no?: string){
+	async get_batch(batch_no?: string, empID?: number){
 		return await this.supabase.schema('dts').from('receiving_slip').select().eq('batch_no', batch_no)
-					 .order('control_no', {ascending: true});
+					.eq('created_by', empID).order('control_no', {ascending: true});
 	}
 
 	async check_document_status(control_no: string){

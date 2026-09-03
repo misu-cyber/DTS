@@ -459,12 +459,14 @@ export class Dashboard implements OnInit{
 	}
 
 	async fetchDocs(page: number=1){
+		this.isLoading = true;
 		const from = (page - 1) * this.pageSize;
   		const to = from + this.pageSize - 1;
 
 		const { data, count, error } = await this.dashboardService.getDocumentsSearch(from, to, this.search, localStorage.getItem('empID')?.toString())
 
 		if (!error) {
+			this.isLoading = false;
 			this.totalRecords = count ?? 0;
 			this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
 			this.currentPage = page;
@@ -1173,16 +1175,16 @@ export class Dashboard implements OnInit{
 		doc.rect(15, tableY + 98, 180, 45, 'S');
 		doc.rect(15, tableY + 146, 180, 45, 'S');
 
-		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 7);
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION      [ ] FOR REVIEW      DATE:_____________', 18, tableY + 7);
 		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 12);
 
-		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 55);
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION      [ ] FOR REVIEW      DATE:_____________', 18, tableY + 55);
 		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 60);
 
-		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 103);
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION      [ ] FOR REVIEW      DATE:_____________', 18, tableY + 103);
 		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 108);
 
-		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION', 18, tableY + 151);
+		doc.text('REMARKS:      [ ] FOR APPROVAL      [ ] FOR REVISION      [ ] FOR REVIEW      DATE:_____________', 18, tableY + 151);
 		doc.text('SPECIFIC INSTRUCTIONS: ', 18, tableY + 156);
 
 		//doc.save(`ROUTING SLIP_${control_no}.pdf`);
@@ -1199,7 +1201,7 @@ export class Dashboard implements OnInit{
 	async printReceivingSlip(batch_no: string){
 
 		this.value_batch.length = 0;
-		this.result_batch = await this.dashboardService.get_batch(batch_no);
+		this.result_batch = await this.dashboardService.get_batch(batch_no, this.empID());
 
 		for(let x=0; x<Object.keys(this.result_batch.data).length; x++){
 
