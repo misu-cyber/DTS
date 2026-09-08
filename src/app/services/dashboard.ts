@@ -136,8 +136,8 @@ export class DashboardService {
 	async getDocumentsSearch(from: number, to: number, search: string, empID?: string){
 		return await this.supabase.schema('dts').from('search_document').select('*', { count: 'exact' })
 					 .or(`control_no.ilike.%${search}%, document_title.ilike.%${search}%`)
-					 //.eq('route_to', empID)
-					 .or(`route_to.eq.${empID}, isConfidential.eq.false`)
+					 .eq('route_to', empID)
+					 //.or(`route_to.eq.${empID}, isConfidential.eq.false`)
 					 .range(from, to);
 	}
 
