@@ -50,6 +50,7 @@ export class Login implements AfterViewInit {
 	search : any;
 
 	isLoading = false;
+	isLoadingDoc = false;
 
 	constructor(
   		private cdr: ChangeDetectorRef
@@ -106,16 +107,25 @@ export class Login implements AfterViewInit {
 	}
 
 	async fetchDocs(page: number=1){
+		this.isLoadingDoc = true;
 		const from = (page - 1) * this.pageSize;
   		const to = from + this.pageSize - 1;
 
 		const { data, count, error } = await this.userService.getDocumentsSearch(from, to, this.search)
 
 		if (!error) {
+			this.isLoadingDoc = false;
 			this.result = data ?? [];
 			this.totalRecords = count ?? 0;
-			this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+			this.totalPages = Math.ceil(this.totalRecords / this.pageSize) ?? 0;
 			this.currentPage = page;
+		} else {
+			this.isLoadingDoc = false;
+			swal.fire({
+				icon: "error",
+				title: "Error",
+				text: 'Please try again.',
+			});
 		}
 
 		this.cdr.detectChanges();
@@ -135,20 +145,45 @@ export class Login implements AfterViewInit {
 			this.cdr.detectChanges();
 		}
 
-		goToPage(page: number) {
+		goToPage(page: number | string): void {
+			if (typeof page !== 'number') {
+				return;
+			}
+
+			if (page < 1 || page > this.totalPages) {
+				return;
+			}
 			this.fetchDocs(page);
 			this.cdr.detectChanges();
 		}
 
-		get pages(): number[] {
-			return Array.from(
-				{ length: this.totalPages },
-				(_, i) => i + 1
-			);
+		get pages(): (number | string)[] {
+			// return Array.from(
+			// 	{ length: this.totalPages },
+			// 	(_, i) => i + 1
+			// );
+
+			const total = this.totalPages;
+  			const current = this.currentPage;
+
+			if (total <= 3) {
+				return Array.from({ length: total }, (_, i) => i + 1);
+			}
+
+			if (current <= 2) {
+				return [1, 2, 3, '...', total];
+			}
+
+			if (current >= total - 2) {
+				return [1, '...', total - 2, total - 1, total];
+			}
+
+			return [1,'...',current - 1,current,current + 1,'...',total];
 		}
 
 	async viewDocument(id: number, status: number){
 
+		this.isLoadingDoc = true;
 		this.route = [];
 		this.value = await this.dashboardService.get_document_detail(id);
 
@@ -178,6 +213,7 @@ export class Login implements AfterViewInit {
 			})
 		})
 
+		this.isLoadingDoc = false;
 		this.cdr.detectChanges();
 	}
 	
@@ -204,7 +240,7 @@ export class Login implements AfterViewInit {
 				icon: "error",
 				title: "Sign In failed",
 				text: 'Wrong username / password',
-		});
+			});
       
 		} else {
 			this.result = await this.userService.getEmployee(this.email());      

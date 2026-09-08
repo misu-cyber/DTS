@@ -269,7 +269,7 @@ export class Dashboard implements OnInit{
 		if (!error) {
 			this.createddocs = data ?? [];
 			this.totalRecordsCreated = count ?? 0;
-			this.totalPagesCreated = Math.ceil(this.totalRecordsCreated / this.pageSize);
+			this.totalPagesCreated = Math.ceil(this.totalRecordsCreated / this.pageSize) ?? 0;
 			this.currentPageCreated = page;
 		}
 
@@ -292,16 +292,41 @@ export class Dashboard implements OnInit{
 			this.cdr.detectChanges();
 		}
 
-		goToPageCreated(page: number) {
+		goToPageCreated(page: number | string): void {
+			if (typeof page !== 'number') {
+				return;
+			}
+
+			if (page < 1 || page > this.totalPagesCreated) {
+				return;
+			}
+
 			this.fetchDocCreated(page);
 			this.cdr.detectChanges();
 		}
 
-		get pagesCreated(): number[] {
-			return Array.from(
-				{ length: this.totalPagesCreated },
-				(_, i) => i + 1
-			);
+		get pagesCreated(): (number | string)[] {
+			// return Array.from(
+			// 	{ length: this.totalPagesCreated },
+			// 	(_, i) => i + 1
+			// );
+
+			const total = this.totalPagesCreated;
+  			const current = this.currentPageCreated;
+
+			if (total <= 3) {
+				return Array.from({ length: total }, (_, i) => i + 1);
+			}
+
+			if (current <= 2) {
+				return [1, 2, 3, '...', total];
+			}
+
+			if (current >= total - 2) {
+				return [1, '...', total - 2, total - 1, total];
+			}
+
+			return [1,'...',current - 1,current,current + 1,'...',total];
 		}
 
 	async fetchDocCompleted(page: number = 1){
@@ -313,7 +338,7 @@ export class Dashboard implements OnInit{
 		if (!error) {
 			this.completeddocs = data ?? [];
 			this.totalRecordsCompleted = count ?? 0;
-			this.totalPagesCompleted = Math.ceil(this.totalRecordsCompleted / this.pageSize);
+			this.totalPagesCompleted = Math.ceil(this.totalRecordsCompleted / this.pageSize) ?? 0;
 			this.currentPageCompleted = page;
 		}
 		
@@ -321,6 +346,7 @@ export class Dashboard implements OnInit{
 		// this.completeddocs = this.result.data;
 		this.cdr.detectChanges();
 	}
+
 		nextPageCompleted() {
 			if (this.currentPageCompleted < this.totalPagesCompleted) {
 				this.fetchDocCompleted(this.currentPageCompleted + 1);
@@ -335,16 +361,41 @@ export class Dashboard implements OnInit{
 			this.cdr.detectChanges();
 		}
 
-		goToPageCompleted(page: number) {
+		goToPageCompleted(page: number| string): void {
+			if (typeof page !== 'number') {
+				return;
+			}
+
+			if (page < 1 || page > this.totalPagesCompleted) {
+				return;
+			}
+
 			this.fetchDocCompleted(page);
 			this.cdr.detectChanges();
 		}
 
-		get pagesCompleted(): number[] {
-			return Array.from(
-				{ length: this.totalPagesCompleted },
-				(_, i) => i + 1
-			);
+		get pagesCompleted(): (number | string)[] {
+			// return Array.from(
+			// 	{ length: this.totalPagesCompleted },
+			// 	(_, i) => i + 1
+			// );
+
+			const total = this.totalPagesCompleted;
+  			const current = this.currentPageCompleted;
+
+			if (total <= 3) {
+				return Array.from({ length: total }, (_, i) => i + 1);
+			}
+
+			if (current <= 2) {
+				return [1, 2, 3, '...', total];
+			}
+
+			if (current >= total - 2) {
+				return [1, '...', total - 2, total - 1, total];
+			}
+
+			return [1,'...',current - 1,current,current + 1,'...',total];
 		}
 
 	async fetchDocCancelled(page: number = 1){
@@ -356,7 +407,7 @@ export class Dashboard implements OnInit{
 		if (!error) {
 			this.cancelleddocs = data ?? [];
 			this.totalRecordsCancelled = count ?? 0;
-			this.totalPagesCancelled = Math.ceil(this.totalRecordsCancelled / this.pageSize);
+			this.totalPagesCancelled = Math.ceil(this.totalRecordsCancelled / this.pageSize) ?? 0;
 			this.currentPageCancelled = page;
 		}
 
@@ -367,28 +418,53 @@ export class Dashboard implements OnInit{
 
 		nextPageCancelled() {
 			if (this.currentPageCancelled < this.totalPagesCancelled) {
-				this.fetchDocCompleted(this.currentPageCancelled + 1);
+				this.fetchDocCancelled(this.currentPageCancelled + 1);
 			}
 			this.cdr.detectChanges();
 		}
 
 		previousPageCancelled() {
 			if (this.currentPageCancelled > 1) {
-				this.fetchDocCompleted(this.currentPageCancelled - 1);
+				this.fetchDocCancelled(this.currentPageCancelled - 1);
 			}
 			this.cdr.detectChanges();
 		}
 
-		goToPageCancelled(page: number) {
+		goToPageCancelled(page: number| string): void {
+			if (typeof page !== 'number') {
+				return;
+			}
+
+			if (page < 1 || page > this.totalPagesCancelled) {
+				return;
+			}
+
 			this.fetchDocCancelled(page);
 			this.cdr.detectChanges();
 		}
 
-		get pagesCancelled(): number[] {
-			return Array.from(
-				{ length: this.totalPagesCancelled },
-				(_, i) => i + 1
-			);
+		get pagesCancelled(): (number | string)[] {
+			// return Array.from(
+			// 	{ length: this.totalPagesCancelled },
+			// 	(_, i) => i + 1
+			// );
+
+			const total = this.totalPagesCancelled;
+  			const current = this.currentPageCancelled;
+
+			if (total <= 3) {
+				return Array.from({ length: total }, (_, i) => i + 1);
+			}
+
+			if (current <= 2) {
+				return [1, 2, 3, '...', total];
+			}
+
+			if (current >= total - 2) {
+				return [1, '...', total - 2, total - 1, total];
+			}
+
+			return [1,'...',current - 1,current,current + 1,'...',total];
 		}
 
 	async fetchDocRelease(){
@@ -407,7 +483,7 @@ export class Dashboard implements OnInit{
 		if (!error) {
 			this.receiveddocs = data ?? [];
 			this.totalRecordsReceived = count ?? 0;
-			this.totalPagesReceived = Math.ceil(this.totalRecordsReceived / this.pageSize);
+			this.totalPagesReceived = Math.ceil(this.totalRecordsReceived / this.pageSize) ?? 0;
 			this.currentPageReceived = page;
 		}
 
@@ -432,16 +508,41 @@ export class Dashboard implements OnInit{
 			this.cdr.detectChanges();
 		}
 
-		goToPageReceived(page: number) {
+		goToPageReceived(page: number | string): void {
+			if (typeof page !== 'number') {
+				return;
+			}
+
+			if (page < 1 || page > this.totalPagesReceived) {
+				return;
+			}
+
 			this.fetchDocReceived(page);
 			this.cdr.detectChanges();
 		}
 
-		get pagesReceived(): number[] {
-			return Array.from(
-				{ length: this.totalPagesReceived },
-				(_, i) => i + 1
-			);
+		get pagesReceived(): (number | string)[] {
+			// return Array.from(
+			// 	{ length: this.totalPagesReceived },
+			// 	(_, i) => i + 1
+			// );
+
+			const total = this.totalPagesReceived;
+  			const current = this.currentPageReceived;
+
+			if (total <= 3) {
+				return Array.from({ length: total }, (_, i) => i + 1);
+			}
+
+			if (current <= 2) {
+				return [1, 2, 3, '...', total];
+			}
+
+			if (current >= total - 2) {
+				return [1, '...', total - 2, total - 1, total];
+			}
+
+			return [1,'...',current - 1,current,current + 1,'...',total];
 		}
 
 	async fetchReleasedBatch(){
@@ -468,7 +569,7 @@ export class Dashboard implements OnInit{
 		if (!error) {
 			this.isLoading = false;
 			this.totalRecords = count ?? 0;
-			this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+			this.totalPages = Math.ceil(this.totalRecords / this.pageSize) ?? 0;
 			this.currentPage = page;
 
 			// this.searchdocs = Array.from(
@@ -495,16 +596,41 @@ export class Dashboard implements OnInit{
 			this.cdr.detectChanges();
 		}
 
-		goToPage(page: number) {
+		goToPage(page: number | string): void {
+			if (typeof page !== 'number') {
+				return;
+			}
+
+			if (page < 1 || page > this.totalPages) {
+				return;
+			}
+
 			this.fetchDocs(page);
 			this.cdr.detectChanges();
 		}
 
-		get pages(): number[] {
-			return Array.from(
-				{ length: this.totalPages },
-				(_, i) => i + 1
-			);
+		get pages(): (number | string)[] {
+			// return Array.from(
+			// 	{ length: this.totalPages },
+			// 	(_, i) => i + 1
+			// );
+
+			const total = this.totalPages;
+  			const current = this.currentPage;
+
+			if (total <= 3) {
+				return Array.from({ length: total }, (_, i) => i + 1);
+			}
+
+			if (current <= 2) {
+				return [1, 2, 3, '...', total];
+			}
+
+			if (current >= total - 2) {
+				return [1, '...', total - 2, total - 1, total];
+			}
+
+			return [1,'...',current - 1,current,current + 1,'...',total];
 		}
 
 	async displayDropdown(){

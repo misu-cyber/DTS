@@ -70,17 +70,27 @@
 						<nav>
 							<ul class="pagination justify-content-center">
 								<li class="page-item" [class.disabled]="currentPage === 1">
-									<button	class="page-link" (click)="previousPage()">Previous</button>
+									<button	class="page-link" (click)="previousPage()"><i class="fa-solid fa-angle-left"></i></button>
 								</li>
 
-								@for (page of pages; track page) {
+								<!-- @for (page of pages; track page) {
 									<li class="page-item" [class.active]="page === currentPage">
 										<button class="page-link" (click)="goToPage(page)">{{ page }}</button>
 									</li>
+								} -->
+
+								@for (page of pages; track page) {
+									@if (page === '...') {
+										<li class="page-item disabled"><span class="page-link">...</span></li>
+									} @else {
+										<li	class="page-item" [class.active]="page === currentPage">
+											<button	class="page-link" (click)="goToPage(page)">{{ page }}</button>
+										</li>
+									}
 								}
 
-								<li class="page-item" [class.disabled]="currentPage === totalPages">
-									<button	class="page-link" (click)="nextPage()">Next</button>
+								<li class="page-item" [class.disabled]="currentPage === totalPages || totalPages == 0">
+									<button	class="page-link" (click)="nextPage()"><i class="fa-solid fa-angle-right"></i></button>
 								</li>
 							</ul>
 						</nav>
@@ -162,17 +172,27 @@
 						<nav>
 							<ul class="pagination justify-content-center">
 								<li class="page-item" [class.disabled]="currentPage === 1">
-									<button	class="page-link" (click)="previousPage()">Previous</button>
+									<button	class="page-link" (click)="previousPage()"><i class="fa-solid fa-angle-left"></i></button>
 								</li>
 
-								@for (page of pages; track page) {
+								<!-- @for (page of pages; track page) {
 									<li class="page-item" [class.active]="page === currentPage">
 										<button class="page-link" (click)="goToPage(page)">{{ page }}</button>
 									</li>
+								} -->
+
+								@for (page of pages; track page) {
+									@if (page === '...') {
+										<li class="page-item disabled"><span class="page-link">...</span></li>
+									} @else {
+										<li	class="page-item" [class.active]="page === currentPage">
+											<button	class="page-link" (click)="goToPage(page)">{{ page }}</button>
+										</li>
+									}
 								}
 
-								<li class="page-item" [class.disabled]="currentPage === totalPages">
-									<button	class="page-link" (click)="nextPage()">Next</button>
+								<li class="page-item" [class.disabled]="currentPage === totalPages || totalPages == 0">
+									<button	class="page-link" (click)="nextPage()"><i class="fa-solid fa-angle-right"></i></button>
 								</li>
 							</ul>
 						</nav>
@@ -287,6 +307,20 @@
 
       <div class="mt-2">
         Logging in...
+      </div>
+    </div>
+  </div>
+}
+
+@if(this.isLoadingDoc == true){
+  <div class="loading-overlay">
+    <div class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+
+      <div class="mt-2">
+        Loading...
       </div>
     </div>
   </div>

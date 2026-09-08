@@ -135,17 +135,27 @@
 					<nav>
 						<ul class="pagination justify-content-center">
 							<li class="page-item" [class.disabled]="currentPageCreated === 1">
-								<button	class="page-link" (click)="previousPageCreated()">Previous</button>
+								<button	class="page-link" (click)="previousPageCreated()"><i class="fa-solid fa-angle-left"></i></button>
 							</li>
 
-							@for (page of pagesCreated; track page) {
+							<!-- @for (page of pagesCreated; track page) {
 								<li class="page-item" [class.active]="page === currentPageCreated">
 									<button class="page-link" (click)="goToPageCreated(page)">{{ page }}</button>
 								</li>
+							} -->
+
+							@for (page of pagesCreated; track page) {
+								@if (page === '...') {
+									<li class="page-item disabled"><span class="page-link">...</span></li>
+      							} @else {
+									<li	class="page-item" [class.active]="page === currentPageCreated">
+										<button	class="page-link" (click)="goToPageCreated(page)">{{ page }}</button>
+									</li>
+								}
 							}
 
-							<li class="page-item" [class.disabled]="currentPageCreated === totalPagesCreated">
-								<button	class="page-link" (click)="nextPageCreated()">Next</button>
+							<li class="page-item" [class.disabled]="currentPageCreated === totalPagesCreated || totalPagesCreated == 0">
+								<button	class="page-link" (click)="nextPageCreated()"><i class="fa-solid fa-angle-right"></i></button>
 							</li>
 						</ul>
 					</nav>
@@ -185,17 +195,27 @@
 					<nav>
 						<ul class="pagination justify-content-center">
 							<li class="page-item" [class.disabled]="currentPageReceived === 1">
-								<button	class="page-link" (click)="previousPageReceived()">Previous</button>
+								<button	class="page-link" (click)="previousPageReceived()"><i class="fa-solid fa-angle-left"></i></button>
 							</li>
 
-							@for (page of pagesReceived; track page) {
+							<!-- @for (page of pagesReceived; track page) {
 								<li class="page-item" [class.active]="page === currentPageReceived">
 									<button class="page-link" (click)="goToPageReceived(page)">{{ page }}</button>
 								</li>
+							} -->
+
+							@for (page of pagesReceived; track page) {
+								@if (page === '...') {
+									<li class="page-item disabled"><span class="page-link">...</span></li>
+      							} @else {
+									<li	class="page-item" [class.active]="page === currentPageReceived">
+										<button	class="page-link" (click)="goToPageReceived(page)">{{ page }}</button>
+									</li>
+								}
 							}
 
-							<li class="page-item" [class.disabled]="currentPageReceived === totalPagesReceived">
-								<button	class="page-link" (click)="nextPageReceived()">Next</button>
+							<li class="page-item" [class.disabled]="currentPageReceived === totalPagesReceived || totalPagesReceived == 0">
+								<button	class="page-link" (click)="nextPageReceived()"><i class="fa-solid fa-angle-right"></i></button>
 							</li>
 						</ul>
 					</nav>
@@ -231,17 +251,27 @@
 					<nav>
 						<ul class="pagination justify-content-center">
 							<li class="page-item" [class.disabled]="currentPageCompleted === 1">
-								<button	class="page-link" (click)="previousPageCompleted()">Previous</button>
+								<button	class="page-link" (click)="previousPageCompleted()"><i class="fa-solid fa-angle-left"></i></button>
 							</li>
 
-							@for (page of pagesCompleted; track page) {
+							<!-- @for (page of pagesCompleted; track page) {
 								<li class="page-item" [class.active]="page === currentPageCompleted">
 									<button class="page-link" (click)="goToPageCompleted(page)">{{ page }}</button>
 								</li>
+							} -->
+
+							@for (page of pagesCompleted; track page) {
+								@if (page === '...') {
+									<li class="page-item disabled"><span class="page-link">...</span></li>
+      							} @else {
+									<li	class="page-item" [class.active]="page === currentPageCompleted">
+										<button	class="page-link" (click)="goToPageCompleted(page)">{{ page }}</button>
+									</li>
+								}
 							}
 
-							<li class="page-item" [class.disabled]="currentPageCompleted === totalPagesCompleted">
-								<button	class="page-link" (click)="nextPageCompleted()">Next</button>
+							<li class="page-item" [class.disabled]="currentPageCompleted === totalPagesCompleted || totalPagesCompleted == 0">
+								<button	class="page-link" (click)="nextPageCompleted()"><i class="fa-solid fa-angle-right"></i></button>
 							</li>
 						</ul>
 					</nav>
@@ -277,17 +307,27 @@
 					<nav>
 						<ul class="pagination justify-content-center">
 							<li class="page-item" [class.disabled]="currentPageCancelled === 1">
-								<button	class="page-link" (click)="previousPageCancelled()">Previous</button>
+								<button	class="page-link" (click)="previousPageCancelled()"><i class="fa-solid fa-angle-left"></i></button>
 							</li>
 
-							@for (page of pagesCancelled; track page) {
+							<!-- @for (page of pagesCancelled; track page) {
 								<li class="page-item" [class.active]="page === currentPageCancelled">
 									<button class="page-link" (click)="goToPageCancelled(page)">{{ page }}</button>
 								</li>
+							} -->
+							
+							@for (page of pagesCancelled; track page) {
+								@if (page === '...') {
+									<li class="page-item disabled"><span class="page-link">...</span></li>
+      							} @else {
+									<li	class="page-item" [class.active]="page === currentPageCancelled">
+										<button	class="page-link" (click)="goToPageCancelled(page)">{{ page }}</button>
+									</li>
+								}
 							}
 
-							<li class="page-item" [class.disabled]="currentPageCancelled === totalPagesCancelled">
-								<button	class="page-link" (click)="nextPageCancelled()">Next</button>
+							<li class="page-item" [class.disabled]="currentPageCancelled === totalPagesCancelled || totalPagesCancelled == 0">
+								<button	class="page-link" (click)="nextPageCancelled()"><i class="fa-solid fa-angle-right"></i></button>
 							</li>
 						</ul>
 					</nav>
@@ -715,17 +755,27 @@
 					<nav>
 						<ul class="pagination justify-content-center">
 							<li class="page-item" [class.disabled]="currentPage === 1">
-								<button	class="page-link" (click)="previousPage()">Previous</button>
+								<button	class="page-link" (click)="previousPage()"><i class="fa-solid fa-angle-left"></i></button>
 							</li>
 
-							@for (page of pages; track page) {
+							<!-- @for (page of pages; track page) {
 								<li class="page-item" [class.active]="page === currentPage">
 									<button class="page-link" (click)="goToPage(page)">{{ page }}</button>
 								</li>
+							} -->
+
+							@for (page of pages; track $index) {
+								@if (page === '...') {
+									<li class="page-item disabled"><span class="page-link">...</span></li>
+      							} @else {
+									<li	class="page-item" [class.active]="page === currentPage">
+										<button	class="page-link" (click)="goToPage(page)">{{ page }}</button>
+									</li>
+								}
 							}
 
-							<li class="page-item" [class.disabled]="currentPage === totalPages">
-								<button	class="page-link" (click)="nextPage()">Next</button>
+							<li class="page-item" [class.disabled]="currentPage === totalPages || totalPages == 0">
+								<button	class="page-link" (click)="nextPage()"><i class="fa-solid fa-angle-right"></i></button>
 							</li>
 						</ul>
 					</nav>
